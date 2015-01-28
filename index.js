@@ -27,9 +27,6 @@ app.post('/settings/:key/:value', function (req, res) {
 	settings.writeAllSettings(basic_settings, function (err) {
 		if (err)
 			console.log(err);
-
-		basic_settings.selected = 'settings';
-		res.render('settings.jade', basic_settings);
 	});
 });
 

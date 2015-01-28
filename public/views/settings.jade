@@ -3,20 +3,35 @@ extends ./base.jade
 block content
 	h3 Settings
 	hr
+
 	h5 Look and feel
-	div.dropdown#dd-theme
-		button.btn.btn-default.dropdown-toggle(type='button' data-toggle='dropdown' aria-expanded='true')#ddm-theme Theme
-		ul.dropdown-menu(aria-labeledby='ddm-theme')
-			each t in theme_list
-				li(class=(t === '#{theme}' ? 'active' : ''))
-					a(href='javascript:change_theme("' + t + '")')= t
+	form.form-inline
+		div.form-group
+			div.dropdown#dd-theme
+				button.btn.btn-default.dropdown-toggle(type='button' data-toggle='dropdown' aria-expanded='true')#ddm-theme Theme
+				ul.dropdown-menu(aria-labeledby='ddm-theme')
+					each t in theme_list
+						li(class=(t === '#{theme}' ? 'active' : ''))
+							a(href='javascript:update_setting("theme", "' + t + '");')= t
+
+			div.checkbox
+				label
+					input(type='checkbox')#navbar-color
+					span Inverse navbar color?
 
 	script.
 		$('#dd-theme li.active > a').append(' (current)');
+		$('#navbar-color').prop('checked', #{navbar_inversed});
 
-		function change_theme(theme_name) {
+		function update_setting(key, value) {
 			$.ajax({
-				url: '/settings/theme/' + theme_name,
+				url: '/settings/' + key + '/' + value,
 				method: 'POST'
 			});
+
+			location.reload(true);
 		}
+
+		$('#navbar-color').change(function () {
+			update_setting('navbar_inversed', !#{navbar_inversed});
+		});

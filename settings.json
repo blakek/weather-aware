@@ -4,6 +4,7 @@
     "theme": "paper.min.css",
     "theme_dir": "/css/themes",
     "selected": "settings",
+    "navbar_inversed": "false",
     "theme_list": [
         "cerulean.min.css",
         "cosmo.min.css",
