@@ -1,0 +1,22 @@
+extends ./base.jade
+
+block content
+	h3 Settings
+	hr
+	h5 Look and feel
+	div.dropdown#dd-theme
+		button.btn.btn-default.dropdown-toggle(type='button' data-toggle='dropdown' aria-expanded='true')#ddm-theme Theme
+		ul.dropdown-menu(aria-labeledby='ddm-theme')
+			each t in theme_list
+				li(class=(t === '#{theme}' ? 'active' : ''))
+					a(href='javascript:change_theme("' + t + '")')= t
+
+	script.
+		$('#dd-theme li.active > a').append(' (current)');
+
+		function change_theme(theme_name) {
+			$.ajax({
+				url: '/settings/theme/' + theme_name,
+				method: 'POST'
+			});
+		}

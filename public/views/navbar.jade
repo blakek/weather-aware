@@ -1,4 +1,4 @@
-div.navbar.navbar-default
+div.navbar.navbar-default.navbar-static-top
 	div.container-fluid
 		div.navbar-header
 			button.navbar-toggle.collapsed(type='button', data-toggle='collapse', data-target='#bs-example-navbar-collapse-1')
@@ -12,16 +12,16 @@ div.navbar.navbar-default
 		div.collapse.navbar-collapse#bs-example-navbar-collapse-1
 			ul.nav.navbar-nav
 				li#nav-home
-					a(href='#') Home
+					a(href='/') Home
 							span.sr-only (current)
 				li#nav-forecast
-					a(href='#') Forecast
+					a(href='/forecast') Forecast
 				li#nav-alerts
-					a(href='#') Alerts &nbsp;
-						span.label.label-danger 1
+					a(href='/alerts') Alerts &nbsp;
+						span.label.label-danger #{alert_count}
 
 			ul.nav.navbar-nav.navbar-right
 				li#nav-settings
-					a(href='#') Settings &nbsp;
+					a(href='/settings') Settings &nbsp;
 						span.fa.fa-cogs
 

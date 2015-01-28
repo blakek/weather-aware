@@ -3,3 +3,6 @@ include ./navbar.jade
 
 .container-fluid
 	block content
+
+script.
+	$('#nav-' + '#{selected}').addClass('active');
