@@ -1,0 +1,25 @@
+{
+  "name": "weather-aware",
+  "version": "0.0.1",
+  "description": "A weather customizable alerting system. Very much in-progress.",
+  "main": "index.js",
+  "scripts": {
+    "test": "node index.js --test"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/blakek/weather-aware.git"
+  },
+  "keywords": [
+    "weather",
+    "weather-aware",
+    "alerts",
+    "storm"
+  ],
+  "author": "Blake Knight <oss.ideas@gmail.com>",
+  "license": "Apache 2.0",
+  "bugs": {
+    "url": "https://github.com/blakek/weather-aware/issues"
+  },
+  "homepage": "https://github.com/blakek/weather-aware"
+}
