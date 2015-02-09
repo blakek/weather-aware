@@ -1,4 +1,7 @@
 {
+    "api_keys": {
+        "dark_sky": "ba707597488fbca195f4caaefa9332b8"
+    },
     "alert_count": "",
     "title": "weather|aware",
     "theme": "paper.min.css",

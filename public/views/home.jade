@@ -1,4 +1,27 @@
 extends ./base.jade
 
 block content
-	h3 Hello, World!
+	- var storm_direction = 180;
+	- var sd_transform = storm_direction - 45; // The fa-location-arrow is already tilted 45 degrees
+	.well
+		h1 Today
+			span.small  February 5, 2015
+		p.lead
+			i.wi.wi-cloud
+			|  Conditions: Partly Cloudy
+		p.lead
+			i.wi.wi-thermometer
+			|  Temp: 46.9 &deg;
+		p.lead
+			i.wi.wi-lightning
+			|  Nearest storm: 312 mi&nbsp;
+			i.fa.fa-location-arrow(style="transform:rotate(#{sd_transform}deg)")
+
+	h6 Other weather sources:
+	ul
+		li
+			a(href="http://forecast.io/") Forecast.io
+		li
+			a(href="http://www.weather.gov/") National Weather Service
+		li
+			a(href="http://www.wunderground.com/") Weather Underground
