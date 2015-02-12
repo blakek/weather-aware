@@ -1,43 +1,73 @@
 var os = require('os');
 var fs = require('fs');
 var express = require('express');
+var moment = require('moment');
 var settings = require('./settings.js');
+var wa = require('./weather-aware.js');
 var app = express();
 var PUBLIC_FOLDER = __dirname + '/public';
 var port = process.env.PORT || 4343;
-var basic_settings = settings.getAllSettingsSync();
+var page_settings = settings.getAllSettingsSync();
+
+var weather_source = wa.valid_sources[2]; // This will be set later using the settings file
+wa.setLocation(33.450, -88.818); // Again, set later using settings file.
+weather_source.api_key = page_settings.api_keys[weather_source.api_key_name];
 
 app.set('views', PUBLIC_FOLDER + '/views');
 app.use(express.static(PUBLIC_FOLDER));
 
+function getWeather() {
+	var f = wa.getWeather(undefined, undefined, weather_source);
+	return f;
+}
+
+function setPageSettings(selectedPage) {
+	page_settings.selected = selectedPage;
+	page_settings.date = moment().format('D MMMM YYYY');
+
+	page_settings.weather = getWeather();
+	page_settings.weather.last_updated = moment().format('X');
+	page_settings.weather.alert_count = (page_settings.weather.alerts) ? page_settings.weather.alerts.length : 0;
+}
+
 app.get('/settings', function (req, res) {
-	basic_settings.selected = 'settings';
-	basic_settings.theme_list = fs.readdirSync(PUBLIC_FOLDER + basic_settings.theme_dir);
-	res.render('settings.jade', basic_settings);
+	setPageSettings('settings');
+
+	// Refresh list of themes in theme folder
+	page_settings.theme_list = fs.readdirSync(PUBLIC_FOLDER + page_settings.theme_dir);
+
+	res.render('settings.jade', page_settings);
 });
 
 app.get('/settings/:key', function (req, res) {
-	basic_settings.selected = 'settings';
-	res.render('settings.jade', basic_settings);
+	// Not really used right now...
+	// settings.getValue(req.params.key, function (value) {
+	// 	res.end(JSON.stringify(value));
+	// });
+	res.render('settings.jade', page_settings);
 });
 
 app.post('/settings/:key/:value', function (req, res) {
-	basic_settings[req.params.key] = req.params.value;
+	page_settings[req.params.key] = req.params.value;
 
-	settings.writeAllSettings(basic_settings, function (err) {
+	// FIXME: temporary workaround
+	page_settings.weather = undefined;
+
+	settings.writeAllSettings(page_settings, function (err) {
 		if (err)
-			console.log(err);
+			console.err(err);
 	});
 });
 
 app.get('/', function (req, res) {
-	basic_settings.selected = 'home';
-	res.render('home.jade', basic_settings);
+	setPageSettings('home');
+	res.render('home.jade', page_settings);
 });
 
 app.use('/', function(req, res) {
 	console.error('INVALID URL: ' + req.url);
-	res.render('404.jade', basic_settings);
+	setPageSettings();
+	res.render('404.jade', page_settings);
 });
 
 app.listen(port, function () {

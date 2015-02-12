@@ -1,11 +1,13 @@
 var fs = require('fs');
+
 var SETTINGS_FILE = __dirname + '/settings.json';
 var DEFAULT_SETTINGS = {
-    alert_count: "",
+    api_keys: {},
     title: "weather|aware",
     theme: "paper.min.css",
     theme_dir: "/css/themes",
     selected: "home",
+    navbar_inversed: "false",
     theme_list: []
 };
 

@@ -2,7 +2,6 @@
     "api_keys": {
         "dark_sky": "ba707597488fbca195f4caaefa9332b8"
     },
-    "alert_count": "",
     "title": "weather|aware",
     "theme": "paper.min.css",
     "theme_dir": "/css/themes",
@@ -26,5 +25,6 @@
         "united.min.css",
         "yeti.min.css"
     ],
+    "date": "12 February 2015",
     "_locals": {}
 }

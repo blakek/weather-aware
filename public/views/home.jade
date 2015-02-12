@@ -1,21 +1,55 @@
 extends ./base.jade
 
 block content
-	- var storm_direction = 180;
+	- var storm_direction = weather.now.nearest_storm.bearing;
 	- var sd_transform = storm_direction - 45; // The fa-location-arrow is already tilted 45 degrees
+	- function timeConverter(UNIX_timestamp) { 
+	- 	var a = new Date(UNIX_timestamp*1000);
+	- 	var months = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+	- 	var year = a.getFullYear();
+	- 	var month = months[a.getMonth()];
+	- 	var date = a.getDate();
+	- 	var hour = a.getHours();
+	- 	var min = a.getMinutes() < 10 ? '0' + a.getMinutes() : a.getMinutes();
+	- 	var sec = a.getSeconds() < 10 ? '0' + a.getSeconds() : a.getSeconds();
+	- 	var time = hour + ':' + min + ' (' + month + ', ' + date + ')';
+	- 	return time;
+	- }
+	
 	.well
 		h1 Today
-			span.small  February 5, 2015
-		p.lead
-			i.wi.wi-cloud
-			|  Conditions: Partly Cloudy
+			span.small  #{date}
+		h3
+			i(class='wi wi-#{weather.now.icon}')
+			|  #{weather.now.conditions}
 		p.lead
 			i.wi.wi-thermometer
-			|  Temp: 46.9 &deg;
+			|  #{weather.now.temp} &deg;#{weather.units.temp}   (Hi: #{weather.today.temp.high} / Lo: #{weather.today.temp.low})
 		p.lead
 			i.wi.wi-lightning
-			|  Nearest storm: 312 mi&nbsp;
+			|  Nearest storm: #{weather.now.nearest_storm.distance} #{weather.units.distance}&nbsp;
 			i.fa.fa-location-arrow(style="transform:rotate(#{sd_transform}deg)")
+	
+	if weather.alert_count
+		div.panel.panel-default
+			div.panel-heading
+				h3.panel-title Alerts
+			table.table.table-striped
+				thead
+					tr
+						th Name
+						th Start time
+						th Expiration
+						th More info...
+				tbody
+					each alert in weather.alerts
+						tr
+							td= alert.title
+							td= timeConverter(alert.expires)
+							td= timeConverter(alert.time)
+							td
+								a(href='#{alert.uri}') External link &nbsp;
+									i.fa.fa-external-link
 
 	h6 Other weather sources:
 	ul
@@ -25,3 +59,7 @@ block content
 			a(href="http://www.weather.gov/") National Weather Service
 		li
 			a(href="http://www.wunderground.com/") Weather Underground
+
+	p.small Last updated:&nbsp;
+		= timeConverter(weather.last_updated)
+	
