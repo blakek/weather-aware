@@ -9,7 +9,7 @@ var PUBLIC_FOLDER = __dirname + '/public';
 var port = process.env.PORT || 4343;
 var page_settings = settings.getAllSettingsSync();
 
-var weather_source = wa.valid_sources[2]; // This will be set later using the settings file
+var weather_source = wa.valid_sources[3]; // This will be set later using the settings file
 wa.setLocation(33.450, -88.818); // Again, set later using settings file.
 weather_source.api_key = page_settings.api_keys[weather_source.api_key_name];
 

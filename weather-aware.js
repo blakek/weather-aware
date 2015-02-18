@@ -1,6 +1,6 @@
 var https = require('https');
 var reload_interval = 180000; // Interval (in milliseconds) to refresh
-var location = {}
+var location = {};
 
 var valid_sources = [
 	{
@@ -30,7 +30,7 @@ var valid_sources = [
 		storm_array_uri: '',
 		last_call: undefined,
 		conversion: undefined
-	}
+	},
 	{
 		name: 'test',
 		api_key: '',
@@ -136,7 +136,7 @@ function test2wa(result_object) {
 			temp: 'F',
 			distance: 'mi'
 		}
-	}
+	};
 }
 
 function test2waIcon(origText) {
@@ -170,7 +170,7 @@ module.exports = {
 	location: location,
 	getWeather: getWeather,
 	setLocation: setLocation
-}
+};
 
 // This is only to show the expected layout, and will probably be removed soon.
 // var forecast = {
