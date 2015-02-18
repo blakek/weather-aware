@@ -4,9 +4,10 @@ var location = {}
 
 var valid_sources = [
 	{
-		name: 'forecast.io / Dark Sky', // Human-readable name of the source (required)
+		name: 'forecast.io', // Human-readable name of the source (required)
+		source_site: 'https://developer.forecast.io/', // Website of source for info. Developer site preferred (optional)
 		api_key: '', // The API key... see api_key_name. This will be set later using the api_key_name.
-		api_key_name: 'dark_sky', // ** Name of ** the API key in the settings file (if needed). The settings file is ignored in git, so we can keep our keys here
+		api_key_name: 'forecast_io', // ** Name of ** the API key in the settings file (if needed). The settings file is ignored in git, so we can keep our keys here
 		forecast_uri: 'https://api.forecast.io/forecast/${api_key}/${latitude},${longitude}', // URI to get general forecast data (required)
 		storm_array_uri: 'https://api.darkskyapp.com/v1/interesting/${api_key}', // URI to get wide-area storm data (optional)
 		last_call: undefined, // Last time this source was called. Used for caching request results (esp. to keep from using up free API keys :)
@@ -21,6 +22,15 @@ var valid_sources = [
 		last_call: undefined,
 		conversion: undefined
 	},
+	{
+		name: 'Weather Underground',
+		api_key: '',
+		api_key_name: '',
+		forecast_uri: '',
+		storm_array_uri: '',
+		last_call: undefined,
+		conversion: undefined
+	}
 	{
 		name: 'test',
 		api_key: '',

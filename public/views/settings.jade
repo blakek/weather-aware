@@ -4,20 +4,43 @@ block content
 	h3 Settings
 	hr
 
-	h5 Look and feel
-	form.form-inline
-		div.form-group
-			div.dropdown#dd-theme
-				button.btn.btn-default.dropdown-toggle(type='button' data-toggle='dropdown' aria-expanded='true')#ddm-theme Theme
-				ul.dropdown-menu(aria-labeledby='ddm-theme')
-					each t in theme_list
-						li(class=(t === '#{theme}' ? 'active' : ''))
-							a(href='javascript:update_setting("theme", "' + t + '");')= t
-
+	div.well.row
+		div.col-sm-12
+			h4 Look and feel
+		div.col-sm-4
+			form.form-inline
+				div.form-group
+					div.dropdown#dd-theme
+						button.btn.btn-default.dropdown-toggle(type='button' data-toggle='dropdown' aria-expanded='true')#ddm-theme Theme
+						ul.dropdown-menu(aria-labeledby='ddm-theme')
+							each t in theme_list
+								li(class=(t === '#{theme}' ? 'active' : ''))
+									a(href='javascript:update_setting("theme", "' + t + '");')= t
+		div.col-sm-2
 			div.checkbox
 				label
 					input(type='checkbox')#navbar-color
 					span  Alternate navbar color?
+	div.well.row
+		div.col-sm-12
+			h4 API Keys
+		div.col-sm-12
+			table#api-key-table.table.table-bordered.table-striped
+				thead
+					tr
+						td Service name
+						td API Key
+				tbody
+					tr
+						td
+							a(href="https://developer.forecast.io/") forecast.io
+						if (api !== undefined && api.forecast_io !== '')
+							td #{api.forecast_io}
+								button.btn.btn-default Edit
+						else
+							td
+								input(type="text" placeholder="API key").form-control
+								button.btn.btn-default Edit
 
 	script.
 		$('#dd-theme li.active > a').append(' (current)');
