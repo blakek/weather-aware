@@ -30,17 +30,15 @@ block content
 					tr
 						td Service name
 						td API Key
+						td 
 				tbody
 					tr
 						td
 							a(href="https://developer.forecast.io/") forecast.io
-						if (api !== undefined && api.forecast_io !== '')
-							td #{api.forecast_io}
-								button.btn.btn-default Edit
-						else
-							td
-								input(type="text" placeholder="API key").form-control
-								button.btn.btn-default Edit
+						td
+							input(type="text" placeholder="API key" value=((api_keys !== undefined) ? api_keys.forecast_io : "")).form-control
+						td
+							button.btn.btn-default.btn-block.key-update-btn(data-update-key='forecast_io') Change
 
 	script.
 		$('#dd-theme li.active > a').append(' (current)');
@@ -54,6 +52,10 @@ block content
 
 			location.reload(true);
 		}
+		
+		$('.key-update-btn').click(function () {
+			$(this).data('update-key');
+		});
 
 		$('#navbar-color').change(function () {
 			update_setting('navbar_inversed', !#{navbar_inversed});
