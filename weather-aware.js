@@ -108,7 +108,105 @@ function parseAPIURI(source_object) {
  * to fill our own forecast variable(s)
  */
 function forecastio2wa(result_object) {
-	// FIXME
+	return {
+		location: {
+			latitude: result_object.latitude,
+			longitude: result_object.longitude
+		},
+		now: {
+			temp: result_object.currently.temperature,
+			temp_apparent: result_object.currently.apparentTemperature,
+			conditions: result_object.currently.summary,
+			icon: forecast_io2waIcon(result_object.currently.icon),
+			nearest_storm: {
+				bearing: result_object.currently.nearestStormBearing || 0,
+				distance: result_object.currently.nearestStormDistance || 0
+			},
+			precipitation: {
+				intensity: result_object.currently.precipIntensity,
+				probability: result_object.currently.precipProbability * 100,
+				type: result_object.currently.precipType
+			},
+			wind: {
+				speed: result_object.currently.windSpeed,
+				bearing: result_object.currently.windBearing
+			}
+		},
+		today: {
+			temp: {
+				high: result_object.daily.data[0].temperatureMax,
+				low: result_object.daily.data[0].temperatureMin
+			},
+			sun: {
+				rise_time: result_object.daily.data[0].sunriseTime,
+				set_time: result_object.daily.data[0].sunsetTime
+			},
+			summary: result_object.hourly.summary,
+			icon: forecast_io2waIcon(result_object.hourly.icon),
+			hourly: function () { // will contain precipitation, temp, and other hourly data
+				var r = [];
+
+				result_object.hourly.data.forEach(function (hour_data) {
+					r.push({
+						temp: hour_data.temperature,
+						precipitation: {
+							intensity: hour_data.precipIntensity,
+							probability: hour_data.precipProbability * 100,
+							type: hour_data.precipType
+						},
+						sun: {
+							rise_time: hour_data.sunriseTime,
+							set_time: hour_data.sunsetTime
+						},
+						wind: {
+							bearing: hour_data.windBearing,
+							speed: hour_data.windSpeed
+						},
+						summary: hour_data.summary,
+						icon: forecast_io2waIcon(hour_data.icon),
+						time: hour_data.time
+					});
+				});
+				return r;
+			}
+		},
+		week: {
+			daily: function() {
+				var r = [];
+
+				result_object.daily.data.forEach(function (day_data) {
+					r.push({
+						temp: {
+							high: day_data.temperatureMax,
+							low: day_data.temperatureMin
+						},
+						precipitation: {
+							intensity: day_data.precipIntensity,
+							probability: day_data.precipProbability * 100,
+							type: day_data.precipType
+						},
+						sun: {
+							rise_time: day_data.sunriseTime,
+							set_time: day_data.sunsetTime
+						},
+						wind: {
+							bearing: day_data.windBearing,
+							speed: day_data.windSpeed
+						},
+						summary: day_data.summary,
+						icon: forecast_io2waIcon(day_data.icon),
+						time: day_data.time
+					});
+				});
+				return r;
+			}
+		},
+		alerts: result_object.alerts,
+		units: {
+			temp: 'F',
+			distance: 'mi'
+		}
+	};
 }
 
 /* Used to keep from calling the other APIs during testing our standardized format
@@ -147,10 +245,66 @@ function test2wa(result_object) {
 			sun: {
 				rise_time: result_object.daily.data[0].sunriseTime,
 				set_time: result_object.daily.data[0].sunsetTime
+			},
+			summary: result_object.hourly.summary,
+			icon: forecast_io2waIcon(result_object.hourly.icon),
+			hourly: function () { // will contain precipitation, temp, and other hourly data
+				var r = [];
+
+				result_object.hourly.data.forEach(function (hour_data) {
+					r.push({
+						temp: hour_data.temperature,
+						precipitation: {
+							intensity: hour_data.precipIntensity,
+							probability: hour_data.precipProbability * 100,
+							type: hour_data.precipType
+						},
+						sun: {
+							rise_time: hour_data.sunriseTime,
+							set_time: hour_data.sunsetTime
+						},
+						wind: {
+							bearing: hour_data.windBearing,
+							speed: hour_data.windSpeed
+						},
+						summary: hour_data.summary,
+						icon: forecast_io2waIcon(hour_data.icon),
+						time: hour_data.time
+					});
+				});
+				return r;
 			}
 		},
 		week: {
-			daily_temps: []
+			daily: function() {
+				var r = [];
+
+				result_object.daily.data.forEach(function (day_data) {
+					r.push({
+						temp: {
+							high: day_data.temperatureMax,
+							low: day_data.temperatureMin
+						},
+						precipitation: {
+							intensity: day_data.precipIntensity,
+							probability: day_data.precipProbability * 100,
+							type: day_data.precipType
+						},
+						sun: {
+							rise_time: day_data.sunriseTime,
+							set_time: day_data.sunsetTime
+						},
+						wind: {
+							bearing: day_data.windBearing,
+							speed: day_data.windSpeed
+						},
+						summary: day_data.summary,
+						icon: forecast_io2waIcon(day_data.icon),
+						time: day_data.time
+					});
+				});
+				return r;
+			}
 		},
 		alerts: result_object.alerts,
 		units: {
