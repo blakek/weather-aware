@@ -6,7 +6,7 @@ var valid_sources = [
 	{
 		name: 'forecast.io', // Human-readable name of the source (required)
 		source_site: 'http://forecast.io/', // Website of source for info (optional)
-		api_key: '', // The API key... see api_key_name. This will be set later using the api_key_name.
+		//api_key: '', // The API key... see api_key_name. This will be set later using the api_key_name.
 		api_key_name: 'forecast_io', // ** Name of ** the API key in the settings file (if needed). The settings.json file is ignored in git, so we can keep our keys there
 		forecast_uri: 'https://api.forecast.io/forecast/${api_key}/${latitude},${longitude}', // URI to get general forecast data (required)
 		storm_array_uri: 'https://api.darkskyapp.com/v1/interesting/${api_key}', // URI to get wide-area storm data (optional)
@@ -55,12 +55,17 @@ var valid_sources = [
  * functions needed (e.g. hitting the API source, parsing the data into a
  * standardized format, etc).
  */
-function getWeather(lat, lon, source_obj) {
+function getWeather(source_obj, options, on_complete) {
 	if (source_obj === undefined) {
 		source_obj = valid_sources[0];
 	}
 
-	return callAPI(parseAPIURI(source_obj), source_obj.conversion);
+	if (on_complete === undefined && options !== undefined) {
+		on_complete = options;
+		options = undefined;
+	}
+
+	callAPI(parseAPIURI(source_obj), source_obj.conversion, on_complete);
 }
 
 /* Just a convenience function to set our local location object.
@@ -72,11 +77,11 @@ function setLocation(lat, lon) {
 /* Will be used as the entry-point for getting info from the API URI,
  * calling conversion functions, etc.
  */
-function callAPI(uri, on_complete) {
+function callAPI(uri, conversion_fn, on_complete) {
 	var output = '';
 
 	if (uri.slice(0, 7) === 'file://') {
-		return on_complete(JSON.parse(require('fs').readFileSync(uri.slice(7))));
+		return on_complete(conversion_fn(JSON.parse(require('fs').readFileSync(uri.slice(7)))));
 	}
 
 	https.get(uri, function (res) {
@@ -87,7 +92,7 @@ function callAPI(uri, on_complete) {
 		});
 
 		res.on('end', function (data) {
-			return on_complete(JSON.parse(data));
+			return on_complete(conversion_fn(JSON.parse(output)));
 		});
 	});
 }
@@ -238,7 +243,6 @@ function test2wa(result_object) {
 		},
 		today: {
 			temp: {
-				hourly: [],
 				high: result_object.daily.data[0].temperatureMax,
 				low: result_object.daily.data[0].temperatureMin
 			},
