@@ -32,13 +32,17 @@ block content
 						td API Key
 						td 
 				tbody
-					tr
-						td
-							a(href="https://developer.forecast.io/") forecast.io
-						td
-							input(type="text" id='forecast_io-key' placeholder="API key" value=((api_keys !== undefined) ? api_keys.forecast_io : "")).form-control
-						td
-							button.btn.btn-default.btn-block.key-update-btn(data-update-key='forecast_io') Change
+					each source in valid_sources
+						tr
+							td
+								if (source.source_site !== undefined && source.source_site !== '')
+									a(href="#{source.source_site}")= source.name
+								else
+									span= source.name
+							td
+								input(type="text" id='#{source.api_key_name}-key' placeholder="API key" value=((api_keys !== undefined) ? api_keys[source.api_key_name] : "")).form-control
+							td
+								button.btn.btn-default.btn-block.key-update-btn(data-update-key='#{source.api_key_name}') Change
 
 	script.
 		$('#dd-theme li.active > a').append(' (current)');

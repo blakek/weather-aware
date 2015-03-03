@@ -7,7 +7,7 @@ var valid_sources = [
 		name: 'forecast.io', // Human-readable name of the source (required)
 		source_site: 'https://developer.forecast.io/', // Website of source for info. Developer site preferred (optional)
 		api_key: '', // The API key... see api_key_name. This will be set later using the api_key_name.
-		api_key_name: 'forecast_io', // ** Name of ** the API key in the settings file (if needed). The settings file is ignored in git, so we can keep our keys here
+		api_key_name: 'forecast_io', // ** Name of ** the API key in the settings file (if needed). The settings.json file is ignored in git, so we can keep our keys there
 		forecast_uri: 'https://api.forecast.io/forecast/${api_key}/${latitude},${longitude}', // URI to get general forecast data (required)
 		storm_array_uri: 'https://api.darkskyapp.com/v1/interesting/${api_key}', // URI to get wide-area storm data (optional)
 		last_call: undefined, // Last time this source was called. Used for caching request results (esp. to keep from using up free API keys :)
@@ -15,6 +15,7 @@ var valid_sources = [
 	},
 	{
 		name: 'OpenWeatherMap',
+		source_site: undefined,
 		api_key: '',
 		api_key_name: 'openweathermap',
 		forecast_uri: '',
@@ -24,6 +25,7 @@ var valid_sources = [
 	},
 	{
 		name: 'Weather Underground',
+		source_site: 'http://www.wunderground.com/weather/api/',
 		api_key: '',
 		api_key_name: 'wunderground',
 		forecast_uri: '',
@@ -33,6 +35,7 @@ var valid_sources = [
 	},
 	{
 		name: 'National Weather Service',
+		source_site: undefined,
 		api_key: '',
 		api_key_name: 'weather_gov',
 		forecast_uri: '',
@@ -42,6 +45,7 @@ var valid_sources = [
 	},
 	{
 		name: 'test',
+		source_site: undefined,
 		api_key: '',
 		api_key_name: '',
 		forecast_uri: 'file://' + __dirname + '/test/local.json',

@@ -35,6 +35,7 @@ app.get('/settings', function (req, res) {
 
 	// Refresh list of themes in theme folder
 	page_settings.theme_list = fs.readdirSync(PUBLIC_FOLDER + page_settings.theme_dir);
+	page_settings.valid_sources = wa.valid_sources;
 
 	res.render('settings.jade', page_settings);
 });
@@ -60,8 +61,6 @@ app.post('/settings/:key/:value', function (req, res) {
 });
 
 app.post('/settings/api_keys/:service/:api_key', function (req, res) {
-	console.log('Hitting correct function');
-
 	page_settings.api_keys[req.params.service] = req.params.api_key;
 
 	// FIXME: temporary workaround
