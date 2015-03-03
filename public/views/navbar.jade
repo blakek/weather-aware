@@ -18,7 +18,8 @@ div.navbar.navbar-default.navbar-static-top(class=(navbar_inversed === 'true' ? 
 					a(href='/forecast') Forecast
 				li#nav-alerts
 					a(href='/alerts') Alerts &nbsp;
-						span.label.label-danger #{weather.alert_count}
+						if weather.alert_count > 0
+							span.label.label-danger #{weather.alert_count}
 
 			ul.nav.navbar-nav.navbar-right
 				li#nav-settings
