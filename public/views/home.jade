@@ -43,8 +43,8 @@ block content
 					each alert in weather.alerts
 						tr
 							td= alert.title
-							td= timeConverter(alert.expires)
 							td= timeConverter(alert.time)
+							td= timeConverter(alert.expires)
 							td
 								a(href='#{alert.uri}') External link &nbsp;
 									i.fa.fa-external-link
