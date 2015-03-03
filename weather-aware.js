@@ -5,45 +5,41 @@ var location = {};
 var valid_sources = [
 	{
 		name: 'forecast.io', // Human-readable name of the source (required)
-		source_site: 'https://developer.forecast.io/', // Website of source for info. Developer site preferred (optional)
+		source_site: 'http://forecast.io/', // Website of source for info (optional)
 		api_key: '', // The API key... see api_key_name. This will be set later using the api_key_name.
 		api_key_name: 'forecast_io', // ** Name of ** the API key in the settings file (if needed). The settings.json file is ignored in git, so we can keep our keys there
 		forecast_uri: 'https://api.forecast.io/forecast/${api_key}/${latitude},${longitude}', // URI to get general forecast data (required)
 		storm_array_uri: 'https://api.darkskyapp.com/v1/interesting/${api_key}', // URI to get wide-area storm data (optional)
-		last_call: undefined, // Last time this source was called. Used for caching request results (esp. to keep from using up free API keys :)
+		last_call: undefined, // Last time this source was called. Used for caching request results (esp. to keep from using up free API keys)
 		conversion: forecastio2wa // Function to populate our own variables from the API's. Should expect 1 argument - an object the API responded with (required)
-	},
-	{
+	},{
 		name: 'OpenWeatherMap',
-		source_site: undefined,
+		source_site: 'http://openweathermap.org/',
 		api_key: '',
 		api_key_name: 'openweathermap',
 		forecast_uri: '',
 		storm_array_uri: '',
 		last_call: undefined,
 		conversion: undefined
-	},
-	{
+	},{
 		name: 'Weather Underground',
-		source_site: 'http://www.wunderground.com/weather/api/',
+		source_site: 'http://www.wunderground.com/',
 		api_key: '',
 		api_key_name: 'wunderground',
 		forecast_uri: '',
 		storm_array_uri: '',
 		last_call: undefined,
 		conversion: undefined
-	},
-	{
+	},{
 		name: 'National Weather Service',
-		source_site: undefined,
+		source_site: 'http://www.weather.gov/',
 		api_key: '',
 		api_key_name: 'weather_gov',
 		forecast_uri: '',
 		storm_array_uri: '',
 		last_call: undefined,
 		conversion: undefined
-	},
-	{
+	},{
 		name: 'test',
 		source_site: undefined,
 		api_key: '',
