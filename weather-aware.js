@@ -51,6 +51,10 @@ var valid_sources = [
 	}
 ];
 
+/* This is really the only function useful externally. It calls all the other
+ * functions needed (e.g. hitting the API source, parsing the data into a
+ * standardized format, etc).
+ */
 function getWeather(lat, lon, source_obj) {
 	if (source_obj === undefined) {
 		source_obj = valid_sources[0];
@@ -59,6 +63,8 @@ function getWeather(lat, lon, source_obj) {
 	return callAPI(parseAPIURI(source_obj), source_obj.conversion);
 }
 
+/* Just a convenience function to set our local location object.
+ */
 function setLocation(lat, lon) {
 	location = { latitude: lat, longitude: lon };
 }
@@ -86,6 +92,12 @@ function callAPI(uri, on_complete) {
 	});
 }
 
+/* Takes a URI (e.g. forecast_uri) from a source object and replaces the
+ * following if found:
+ * ${api_key} => currently set longitude
+ * ${latitude} => currently set latitude
+ * ${longitude} => our source_object's API key
+ */
 function parseAPIURI(source_object) {
 	return source_object.forecast_uri.replace(/\$\{api_key\}/g, source_object.api_key)
 	                                 .replace(/\$\{latitude\}/g, location.latitude)
@@ -99,7 +111,7 @@ function forecastio2wa(result_object) {
 	// FIXME
 }
 
-/* Will be used to keep from calling the other APIs during testing
+/* Used to keep from calling the other APIs during testing our standardized format
  */
 function test2wa(result_object) {
 	return {
@@ -111,13 +123,13 @@ function test2wa(result_object) {
 			temp: result_object.currently.temperature,
 			temp_apparent: result_object.currently.apparentTemperature,
 			conditions: result_object.currently.summary,
-			icon: test2waIcon(result_object.currently.icon),
+			icon: forecast_io2waIcon(result_object.currently.icon),
 			nearest_storm: {
 				bearing: result_object.currently.nearestStormBearing || 0,
 				distance: result_object.currently.nearestStormDistance || 0
 			},
 			precipitation: {
-				insensity: result_object.currently.precipIntensity,
+				intensity: result_object.currently.precipIntensity,
 				probability: result_object.currently.precipProbability * 100,
 				type: result_object.currently.precipType
 			},
@@ -148,7 +160,7 @@ function test2wa(result_object) {
 	};
 }
 
-function test2waIcon(origText) {
+function forecast_io2waIcon(origText) {
 	switch (origText) {
 		case 'partly-cloudy-day':
 			return 'day-cloudy';
@@ -180,49 +192,3 @@ module.exports = {
 	getWeather: getWeather,
 	setLocation: setLocation
 };
-
-// This is only to show the expected layout, and will probably be removed soon.
-// var forecast = {
-// 	location: { // To keep up with where this forecast was for. Note to self: maybe useful for caching calls, too??
-// 		latitude: '',
-// 		longitude: ''
-// 	},
-// 	now: {
-// 		temp: '',
-// 		temp_apparent: '',
-// 		conditions: '',
-// 		icon: '',
-// 		nearest_storm: {
-// 			bearing: '', // A numerical value representing the direction of the nearest storm in degrees, with true north at 0° and progressing clockwise. (If nearestStormDistance is zero, then this value will not be defined. The caveats that apply to nearestStormDistance also apply to this value.)
-// 			distance: '' // A numerical value representing the distance to the nearest storm in miles. (This value is very approximate and should not be used in scenarios requiring accurate results. In particular, a storm distance of zero doesn’t necessarily refer to a storm at the requested location, but rather a storm in the vicinity of that location.)
-// 		},
-// 		precipitation: {
-// 			insensity: '', // A numerical value representing the average expected intensity (in inches of liquid water per hour) of precipitation occurring at the given time conditional on probability (that is, assuming any precipitation occurs at all). A very rough guide is that a value of 0 in./hr. corresponds to no precipitation, 0.002 in./hr. corresponds to very light precipitation, 0.017 in./hr. corresponds to light precipitation, 0.1 in./hr. corresponds to moderate precipitation, and 0.4 in./hr. corresponds to heavy precipitation.
-// 			probability: '',
-// 			type: ''
-// 		},
-// 		wind: {
-// 			speed: '',
-// 			bearing: ''
-// 		}
-// 	},
-// 	today: {
-// 		temp: {
-// 			hourly: [],
-// 			high: '',
-// 			low: ''
-// 		},
-// 		sun: {
-// 			rise_time: '',
-// 			set_time: ''
-// 		}
-// 	},
-// 	week: {
-// 		daily_temps: []
-// 	},
-// 	alerts: [],
-// 	units: {
-// 		temp: '', // C, F, K, etc
-// 		distance: '' // km, m, mi, etc.
-// 	}
-// };
