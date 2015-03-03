@@ -30,17 +30,19 @@ block content
 					tr
 						td Service name
 						td API Key
+						td 
 				tbody
-					tr
-						td
-							a(href="https://developer.forecast.io/") forecast.io
-						if (api !== undefined && api.forecast_io !== '')
-							td #{api.forecast_io}
-								button.btn.btn-default Edit
-						else
+					each source in valid_sources
+						tr
 							td
-								input(type="text" placeholder="API key").form-control
-								button.btn.btn-default Edit
+								if (source.source_site !== undefined && source.source_site !== '')
+									a(href="#{source.source_site}")= source.name
+								else
+									span= source.name
+							td
+								input(type="text" id='#{source.api_key_name}-key' placeholder="API key" value=((api_keys !== undefined) ? api_keys[source.api_key_name] : "")).form-control
+							td
+								button.btn.btn-default.btn-block.key-update-btn(data-update-key='#{source.api_key_name}') Change
 
 	script.
 		$('#dd-theme li.active > a').append(' (current)');
@@ -54,6 +56,10 @@ block content
 
 			location.reload(true);
 		}
+		
+		$('.key-update-btn').click(function () {
+			update_setting('api_keys/' + $(this).data('update-key'), $('#' + $(this).data('update-key') + '-key').val());
+		});
 
 		$('#navbar-color').change(function () {
 			update_setting('navbar_inversed', !#{navbar_inversed});
