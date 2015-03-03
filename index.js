@@ -59,6 +59,20 @@ app.post('/settings/:key/:value', function (req, res) {
 	});
 });
 
+app.post('/settings/api_keys/:service/:api_key', function (req, res) {
+	console.log('Hitting correct function');
+
+	page_settings.api_keys[req.params.service] = req.params.api_key;
+
+	// FIXME: temporary workaround
+	page_settings.weather = undefined;
+
+	settings.writeAllSettings(page_settings, function (err) {
+		if (err)
+			console.err(err);
+	});
+});
+
 app.get('/', function (req, res) {
 	setPageSettings('home');
 	res.render('home.jade', page_settings);

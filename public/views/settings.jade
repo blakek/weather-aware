@@ -36,7 +36,7 @@ block content
 						td
 							a(href="https://developer.forecast.io/") forecast.io
 						td
-							input(type="text" placeholder="API key" value=((api_keys !== undefined) ? api_keys.forecast_io : "")).form-control
+							input(type="text" id='forecast_io-key' placeholder="API key" value=((api_keys !== undefined) ? api_keys.forecast_io : "")).form-control
 						td
 							button.btn.btn-default.btn-block.key-update-btn(data-update-key='forecast_io') Change
 
@@ -54,7 +54,7 @@ block content
 		}
 		
 		$('.key-update-btn').click(function () {
-			$(this).data('update-key');
+			update_setting('api_keys/' + $(this).data('update-key'), $('#' + $(this).data('update-key') + '-key').val());
 		});
 
 		$('#navbar-color').change(function () {
