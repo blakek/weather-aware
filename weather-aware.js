@@ -16,7 +16,7 @@ var valid_sources = [
 	{
 		name: 'OpenWeatherMap',
 		api_key: '',
-		api_key_name: '',
+		api_key_name: 'openweathermap',
 		forecast_uri: '',
 		storm_array_uri: '',
 		last_call: undefined,
@@ -25,7 +25,16 @@ var valid_sources = [
 	{
 		name: 'Weather Underground',
 		api_key: '',
-		api_key_name: '',
+		api_key_name: 'wunderground',
+		forecast_uri: '',
+		storm_array_uri: '',
+		last_call: undefined,
+		conversion: undefined
+	},
+	{
+		name: 'National Weather Service',
+		api_key: '',
+		api_key_name: 'weather_gov',
 		forecast_uri: '',
 		storm_array_uri: '',
 		last_call: undefined,
