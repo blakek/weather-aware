@@ -118,7 +118,7 @@ function test2wa(result_object) {
 			},
 			precipitation: {
 				insensity: result_object.currently.precipIntensity,
-				probability: result_object.currently.precipProbability,
+				probability: result_object.currently.precipProbability * 100,
 				type: result_object.currently.precipType
 			},
 			wind: {
