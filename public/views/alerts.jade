@@ -1,0 +1,42 @@
+extends ./base.jade
+
+block content
+	- var storm_direction = weather.now.nearest_storm.bearing;
+	- var sd_transform = storm_direction - 45; // The fa-location-arrow is already tilted 45 degrees
+
+	- function timeConverter(UNIX_timestamp) {
+	- 	var a = new Date(UNIX_timestamp * 1000);
+	- 	var months = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+	- 	var year = a.getFullYear();
+	- 	var month = months[a.getMonth()];
+	- 	var date = a.getDate();
+	- 	var hour = a.getHours();
+	- 	var min = a.getMinutes() < 10 ? '0' + a.getMinutes() : a.getMinutes();
+	- 	var sec = a.getSeconds() < 10 ? '0' + a.getSeconds() : a.getSeconds();
+	- 	var time = hour + ':' + min + ' (' + month + ', ' + date + ')';
+	- 	return time;
+	- }
+
+	if weather.alert_count
+		div.panel.panel-default
+			div.panel-heading
+				h3.panel-title Alerts
+			table.table.table-striped
+				thead
+					tr
+						th Name
+						th Start time
+						th Expiration
+						th More info...
+				tbody
+					each alert in weather.alerts
+						tr
+							td= alert.title
+							td= timeConverter(alert.time)
+							td= timeConverter(alert.expires)
+							td
+								a(href='#{alert.uri}') External link #[i.fa.fa-external-link]
+	else
+		h4 #[i.fa.fa-check-circle.text-success] No alerts found
+
+	p.small Last updated: #[=timeConverter(weather.last_updated)]

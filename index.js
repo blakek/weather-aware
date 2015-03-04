@@ -80,9 +80,11 @@ app.post('/settings/api_keys/:service/:api_key', function (req, res) {
 	});
 });
 
-app.get('/', function (req, res) {
-	setPageSettings('home', function () {
-		res.render('home.jade', page_settings);
+app.get(['/', '/home', '/forecast', '/alerts'], function (req, res) {
+	var page = req.path.slice(1) || 'home';
+
+	setPageSettings('page', function () {
+		res.render(page + '.jade', page_settings);
 	});
 });
 
