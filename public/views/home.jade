@@ -28,9 +28,12 @@ block content
 			i.wi.wi-thermometer
 			|  Temp: #{weather.now.temp} &deg;#{weather.units.temp}   (Hi: #{weather.today.temp.high} / Lo: #{weather.today.temp.low})
 		p.lead
-			i.wi.wi-sprinkles
-			|  Current: #{weather.now.precipitation.probability}%
-			//- |  All-day: #{weather.week[0].precipitation.probability}%
+			i.fa-fw.wi.wi-sprinkles
+			|  Current chance: #{weather.now.precipitation.probability}%
+			|  / All-day: #{weather.week.daily()[0].precipitation.probability}%
+		p.lead
+			i.fa-fw.wi.wi-strong-wind
+			|  Wind: #{weather.now.wind.speed} #{weather.units.speed}
 		p.lead
 			i.wi.wi-lightning
 			|  Nearest storm: #{weather.now.nearest_storm.distance} #{weather.units.distance}&nbsp;
