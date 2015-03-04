@@ -54,8 +54,7 @@ block content
 							td= timeConverter(alert.time)
 							td= timeConverter(alert.expires)
 							td
-								a(href='#{alert.uri}') External link &nbsp;
-									i.fa.fa-external-link
+								a(href='#{alert.uri}') External link #[i.fa.fa-external-link]
 
 	h6 Other weather sources:
 	ul
@@ -66,6 +65,5 @@ block content
 		li
 			a(href="http://www.wunderground.com/") Weather Underground
 
-	p.small Last updated:&nbsp;
-		= timeConverter(weather.last_updated)
+	p.small Last updated: #[=timeConverter(weather.last_updated)]
 	
