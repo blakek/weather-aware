@@ -209,7 +209,8 @@ function forecastio2wa(result_object) {
 		alerts: result_object.alerts,
 		units: {
 			temp: 'F',
-			distance: 'mi'
+			distance: 'mi',
+			speed: 'mph'
 		}
 	};
 }
@@ -313,7 +314,8 @@ function test2wa(result_object) {
 		alerts: result_object.alerts,
 		units: {
 			temp: 'F',
-			distance: 'mi'
+			distance: 'mi',
+			speed: 'mph'
 		}
 	};
 }
