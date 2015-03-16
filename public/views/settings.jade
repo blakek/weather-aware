@@ -14,6 +14,15 @@ block content
 					input(id='locations[0][lon]' type='text' placeholder='Longitude' value='#{locations[0].lon}').form-control
 				button#location-change.btn.btn-default Change
 			p.help-block This section will go under some big changes in the future... I'll likely move this to be a search-bar thingy in the navbar later on.
+			
+	div.well.row
+		h4 Weather Sources
+		.btn-group(data-toggle='buttons')
+			each source in valid_sources
+				if (source.enabled)
+					label.btn.btn-default(class=(source.id === weather_source) ? 'active': '')
+						input(type='radio' name='source-select' data-toggle='#{source.id}' autocomplete='off')
+						= source.name
 	
 	div.well.row
 		h4 Look and feel
@@ -71,6 +80,10 @@ block content
 
 			location.reload(true);
 		}
+		
+		$('input[name="source-select"]').change(function () {
+			update_setting('weather_source', $(this).data('toggle'));
+		});
 		
 		$('.key-update-btn').click(function () {
 			update_setting('api_keys/' + $(this).data('update-key'), $('#' + $(this).data('update-key') + '-key').val());

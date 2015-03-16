@@ -34,15 +34,11 @@ block content
 				thead
 					tr
 						th Name
-						th Start time
-						th Expiration
 						th More info...
 				tbody
 					each alert in weather.alerts
 						tr
 							td= alert.title
-							td= timeConverter(alert.time)
-							td= timeConverter(alert.expires)
 							td
 								a(href='#{alert.uri}') External link #[i.fa.fa-external-link]
 

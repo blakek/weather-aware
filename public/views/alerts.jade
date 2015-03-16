@@ -17,7 +17,7 @@ block content
 	- 	return time;
 	- }
 
-	if weather.alert_count
+	if weather.alert_count > 0
 		.panel.panel-default
 			.panel-heading
 				h3.panel-title Alerts
@@ -53,7 +53,8 @@ block content
 				var button = $(event.relatedTarget);
 				var index = button.data('key');
 				
-				$(this).find('.modal-title').text('#{weather.alerts[' + index + '].title}');
+				// FIXME: Fix so more than one alert can be shown...
+				$(this).find('.modal-title').text('#{weather.alerts[0].title}');
 				$(this).find('.modal-body').html(!{JSON.stringify(weather.alerts[0].description.replace(/\n/g, "<br />"))});
 			});
 	else

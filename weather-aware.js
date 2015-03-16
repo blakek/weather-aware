@@ -9,7 +9,9 @@ function now() {
 
 var valid_sources = [
 	{
+		id: 'forecast_io', // What we use to identify this source (required)
 		name: 'forecast.io', // Human-readable name of the source (required)
+		enabled: true, // Should this be shown as an option to users (requred for now)
 		source_site: 'http://forecast.io/', // Website of source for info (optional)
 		//api_key: '', // The API key... see api_key_name. This will be set later using the api_key_name.
 		api_key_name: 'forecast_io', // ** Name of ** the API key in the settings file (if needed). The settings.json file is ignored in git, so we can keep our keys there
@@ -18,7 +20,9 @@ var valid_sources = [
 		last_call: undefined, // Last time this source was called. Used for caching request results (esp. to keep from using up free API keys)
 		conversion: forecastio2wa // Function to populate our own variables from the API's. Should expect 1 argument - an object the API responded with (required)
 	},{
+		id: 'openweathermap',
 		name: 'OpenWeatherMap',
+		enabled: false,
 		source_site: 'http://openweathermap.org/',
 		api_key_name: 'openweathermap',
 		forecast_uri: '',
@@ -26,7 +30,9 @@ var valid_sources = [
 		last_call: undefined,
 		conversion: undefined
 	},{
+		id: 'wunderground',
 		name: 'Weather Underground',
+		enabled: false,
 		source_site: 'http://www.wunderground.com/',
 		api_key_name: 'wunderground',
 		forecast_uri: '',
@@ -34,16 +40,20 @@ var valid_sources = [
 		last_call: undefined,
 		conversion: undefined
 	},{
+		id: 'nws',
 		name: 'National Weather Service',
+		enabled: false,
 		source_site: 'http://www.weather.gov/',
 		forecast_uri: '',
 		storm_array_uri: '',
 		last_call: undefined,
 		conversion: undefined
 	},{
+		id: 'testing',
 		name: 'Testing',
+		enabled: true,
 		source_site: undefined,
-		forecast_uri: 'file://' + __dirname + '/test/local.json',
+		forecast_uri: 'file://' + __dirname + '/test/alert.json',
 		storm_array_uri: '',
 		last_call: undefined,
 		conversion: test2wa
@@ -87,6 +97,19 @@ function setLocation(lat, lon) {
 	location = { latitude: lat, longitude: lon };
 }
 
+function getSourceWithId(id) {
+	var ret;
+
+	valid_sources.forEach(function (source) {
+		if (source.id === id) {
+			ret = source;
+			return false;
+		}
+	});
+
+	return ret;
+}
+
 /* Will be used as the entry-point for getting info from the API URI,
  * calling conversion functions, etc.
  */
@@ -97,6 +120,8 @@ function callAPI(uri, conversion_fn, on_complete) {
 		last_call_output = conversion_fn(JSON.parse(require('fs').readFileSync(uri.slice(7))));
 		return on_complete(last_call_output);
 	}
+
+	console.log('Calling: ' + uri);
 
 	https.get(uri, function (res) {
 		res.setEncoding('UTF-8');
@@ -368,6 +393,7 @@ module.exports = {
 	reload_interval: reload_interval,
 	valid_sources: valid_sources,
 	location: location,
+	getSourceWithId: getSourceWithId,
 	getWeather: getWeather,
 	setLocation: setLocation
 };

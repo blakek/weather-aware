@@ -2,6 +2,7 @@ var fs = require('fs');
 
 var SETTINGS_FILE = __dirname + '/settings.json';
 var DEFAULT_SETTINGS = {
+    weather_source: "testing",
     api_keys: {},
     locations: [
         {lat: "33.456291", lon: "-88.795530"}
