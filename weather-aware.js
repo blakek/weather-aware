@@ -96,7 +96,7 @@ function callAPI(uri, conversion_fn, on_complete) {
 	var output = '';
 
 	if (uri.slice(0, 7) === 'file://') {
-		last_call_output = conversion_fn(JSON.parse(require('fs').readFileSync(uri.slice(7))))
+		last_call_output = conversion_fn(JSON.parse(require('fs').readFileSync(uri.slice(7))));
 		return on_complete(last_call_output);
 	}
 
