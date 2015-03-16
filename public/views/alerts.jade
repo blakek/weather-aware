@@ -47,16 +47,16 @@ block content
 						button(type='button' data-dismiss='modal' aria-label='Close').close &times;
 						h4.modal-title Alert Description
 						.modal-body
+						
+		script.
+			$('#descriptionModal').on('show.bs.modal', function (event) {
+				var button = $(event.relatedTarget);
+				var index = button.data('key');
+				
+				$(this).find('.modal-title').text('#{weather.alerts[' + index + '].title}');
+				$(this).find('.modal-body').html(!{JSON.stringify(weather.alerts[0].description.replace(/\n/g, "<br />"))});
+			});
 	else
 		h4 #[i.fa.fa-check-circle.text-success] No alerts found
 
 	p.small Last updated: #[=timeConverter(weather.last_updated)]
-
-	script.
-		$('#descriptionModal').on('show.bs.modal', function (event) {
-			var button = $(event.relatedTarget);
-			var index = button.data('key');
-			
-			$(this).find('.modal-title').text('#{weather.alerts[0].title}');
-			$(this).find('.modal-body').html(!{JSON.stringify(weather.alerts[0].description.replace(/\n/g, "<br />"))});
-		});
