@@ -68,7 +68,7 @@ function getWeather(source_obj, options, on_complete) {
 
 	if (now() - source_obj.last_call < reload_interval) {
 		var remainingtime = source_obj.last_call + reload_interval - now();
-		console.log('Using cached weather results for another ' + remainingtime + ' second(s).');
+		console.info('Using cached weather results for another ' + remainingtime + ' second(s).');
 
 		on_complete(last_call_output);
 		return;
