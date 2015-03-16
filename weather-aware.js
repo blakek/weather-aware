@@ -71,15 +71,16 @@ function getWeather(source_obj, options, on_complete) {
 		console.log('Using cached weather results for another ' + remainingtime + ' second(s).');
 
 		on_complete(last_call_output);
-	} else {
-		if (on_complete === undefined && options !== undefined) {
-			on_complete = options;
-			options = undefined;
-		}
-
-		source_obj.last_call = now();
-		callAPI(parseAPIURI(source_obj), source_obj.conversion, on_complete);
+		return;
 	}
+
+	if (on_complete === undefined && options !== undefined) {
+		on_complete = options;
+		options = undefined;
+	}
+
+	source_obj.last_call = now();
+	callAPI(parseAPIURI(source_obj), source_obj.conversion, on_complete);
 }
 
 /* Just a convenience function to set our local location object.
