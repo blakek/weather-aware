@@ -22,6 +22,7 @@ function setPageSettings(selectedPage, callback) {
 
 	if (selectedPage === '' || selectedPage === null) {
 		callback();
+		return;
 	}
 
 	wa.getWeather(weather_source,  function (weather_data) {
