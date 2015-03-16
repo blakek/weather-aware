@@ -1,5 +1,5 @@
 var https = require('https');
-var reload_interval = 3; // Interval (in seconds) to refresh
+var reload_interval = 180; // Interval (in seconds) to refresh
 var location = {};
 var last_call_output = {};
 

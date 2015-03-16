@@ -27,6 +27,8 @@ function setPageSettings(selectedPage, callback) {
 
 	wa.getWeather(weather_source,  function (weather_data) {
 		page_settings.weather = weather_data;
+		page_settings.last_updated = moment(weather_data.last_updated, 'X').fromNow();
+		page_settings.next_update = moment(weather_source.last_call + wa.reload_interval, 'X').fromNow();
 
 		callback();
 	});
