@@ -36,15 +36,13 @@ var valid_sources = [
 	},{
 		name: 'National Weather Service',
 		source_site: 'http://www.weather.gov/',
-		api_key_name: 'weather_gov',
 		forecast_uri: '',
 		storm_array_uri: '',
 		last_call: undefined,
 		conversion: undefined
 	},{
-		name: 'test',
+		name: 'Testing',
 		source_site: undefined,
-		api_key_name: '',
 		forecast_uri: 'file://' + __dirname + '/test/local.json',
 		storm_array_uri: '',
 		last_call: undefined,

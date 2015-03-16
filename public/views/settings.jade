@@ -38,10 +38,13 @@ block content
 									a(href="#{source.source_site}")= source.name
 								else
 									span= source.name
-							td
-								input(type="text" id='#{source.api_key_name}-key' placeholder="API key" value=((api_keys !== undefined) ? api_keys[source.api_key_name] : "")).form-control
-							td
-								button.btn.btn-default.btn-block.key-update-btn(data-update-key='#{source.api_key_name}') Change
+							if (source.api_key_name === undefined)
+								td(colspan='2').text-muted.text-center No key needed
+							else
+								td
+									input(type='text' id='#{source.api_key_name}-key' placeholder='API key' value=((api_keys !== undefined) ? api_keys[source.api_key_name] : '')).form-control
+								td
+									button.btn.btn-default.btn-block.key-update-btn(data-update-key='#{source.api_key_name}') Change
 
 	script.
 		$('#dd-theme li.active > a').append(' (current)');
