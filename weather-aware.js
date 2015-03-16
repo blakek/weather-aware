@@ -1,6 +1,11 @@
 var https = require('https');
-var reload_interval = 180000; // Interval (in milliseconds) to refresh
+var reload_interval = 3; // Interval (in seconds) to refresh
 var location = {};
+var last_call_output = {};
+
+function now() {
+	return Math.floor(Date.now() / 1000);
+}
 
 var valid_sources = [
 	{
@@ -15,7 +20,6 @@ var valid_sources = [
 	},{
 		name: 'OpenWeatherMap',
 		source_site: 'http://openweathermap.org/',
-		api_key: '',
 		api_key_name: 'openweathermap',
 		forecast_uri: '',
 		storm_array_uri: '',
@@ -24,7 +28,6 @@ var valid_sources = [
 	},{
 		name: 'Weather Underground',
 		source_site: 'http://www.wunderground.com/',
-		api_key: '',
 		api_key_name: 'wunderground',
 		forecast_uri: '',
 		storm_array_uri: '',
@@ -33,7 +36,6 @@ var valid_sources = [
 	},{
 		name: 'National Weather Service',
 		source_site: 'http://www.weather.gov/',
-		api_key: '',
 		api_key_name: 'weather_gov',
 		forecast_uri: '',
 		storm_array_uri: '',
@@ -42,7 +44,6 @@ var valid_sources = [
 	},{
 		name: 'test',
 		source_site: undefined,
-		api_key: '',
 		api_key_name: '',
 		forecast_uri: 'file://' + __dirname + '/test/local.json',
 		storm_array_uri: '',
@@ -65,7 +66,20 @@ function getWeather(source_obj, options, on_complete) {
 		options = null;
 	}
 
-	callAPI(parseAPIURI(source_obj), source_obj.conversion, on_complete);
+	if (now() - source_obj.last_call < reload_interval) {
+		var remainingtime = source_obj.last_call + reload_interval - now();
+		console.log('Using cached weather results for another ' + remainingtime + ' second(s).');
+
+		on_complete(last_call_output);
+	} else {
+		if (on_complete === undefined && options !== undefined) {
+			on_complete = options;
+			options = undefined;
+		}
+
+		source_obj.last_call = now();
+		callAPI(parseAPIURI(source_obj), source_obj.conversion, on_complete);
+	}
 }
 
 /* Just a convenience function to set our local location object.
@@ -81,7 +95,8 @@ function callAPI(uri, conversion_fn, on_complete) {
 	var output = '';
 
 	if (uri.slice(0, 7) === 'file://') {
-		return on_complete(conversion_fn(JSON.parse(require('fs').readFileSync(uri.slice(7)))));
+		last_call_output = conversion_fn(JSON.parse(require('fs').readFileSync(uri.slice(7))))
+		return on_complete(last_call_output);
 	}
 
 	https.get(uri, function (res) {
@@ -92,7 +107,8 @@ function callAPI(uri, conversion_fn, on_complete) {
 		});
 
 		res.on('end', function (data) {
-			return on_complete(conversion_fn(JSON.parse(output)));
+			last_call_output = conversion_fn(JSON.parse(output));
+			return on_complete(last_call_output);
 		});
 	});
 }
