@@ -10,7 +10,7 @@ var port = process.env.PORT || 4343;
 var page_settings = settings.getAllSettingsSync();
 
 var weather_source = wa.valid_sources[wa.valid_sources.length - 1]; // This will be set later using the settings file
-wa.setLocation(33.450, -88.818); // Again, set later using settings file.
+wa.setLocation(page_settings.locations[0].lat, page_settings.locations[0].lon);
 weather_source.api_key = page_settings.api_keys[weather_source.api_key_name];
 
 app.set('views', PUBLIC_FOLDER + '/views');
@@ -52,6 +52,9 @@ app.get('/settings/:key', function (req, res) {
 	res.render('settings.jade', page_settings);
 });
 
+/* TODO: Clean these settings things up. Could probably actually write in the
+ * POST body the values to keep from needing all these different calls to /settings
+ */
 app.post('/settings/:key/:value', function (req, res) {
 	page_settings[req.params.key] = req.params.value;
 
@@ -66,6 +69,21 @@ app.post('/settings/:key/:value', function (req, res) {
 
 app.post('/settings/api_keys/:service/:api_key', function (req, res) {
 	page_settings.api_keys[req.params.service] = req.params.api_key;
+
+	// FIXME: temporary workaround
+	page_settings.weather = undefined;
+
+	settings.writeAllSettings(page_settings, function (err) {
+		if (err)
+			console.err(err);
+	});
+});
+
+app.post('/settings/locations/:index/:lat/:lon', function (req, res) {
+	page_settings.locations[req.params.index] = {
+		lat: req.params.lat,
+		lon: req.params.lon
+	};
 
 	// FIXME: temporary workaround
 	page_settings.weather = undefined;

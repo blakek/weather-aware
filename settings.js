@@ -3,6 +3,9 @@ var fs = require('fs');
 var SETTINGS_FILE = __dirname + '/settings.json';
 var DEFAULT_SETTINGS = {
     api_keys: {},
+    locations: [
+        {lat: "33.456291", lon: "-88.795530"}
+    ],
     title: "weather|aware",
     theme: "paper.min.css",
     theme_dir: "/css/themes",

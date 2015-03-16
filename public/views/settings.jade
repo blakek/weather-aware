@@ -5,8 +5,19 @@ block content
 	hr
 
 	div.well.row
-		div.col-sm-12
-			h4 Look and feel
+		h4 Locations
+		.form-horizontal
+			.form-group
+				label.col-sm-3.control-label Default Location
+				div.col-sm-3
+					input(id='locations[0][lat]' type='text' placeholder='Latitude' value='#{locations[0].lat}').form-control
+				div.col-sm-3
+					input(id='locations[0][lon]' type='text' placeholder='Longitude' value='#{locations[0].lon}').form-control
+				button#location-change.btn.btn-default Change
+			p.help-block This section will go under some big changes in the future... I'll likely move this to be a search-bar thingy in the navbar later on.
+	
+	div.well.row
+		h4 Look and feel
 		div.col-sm-4
 			form.form-inline
 				div.form-group
@@ -21,8 +32,7 @@ block content
 				input(type='checkbox')#navbar-color
 
 	div.well.row
-		div.col-sm-12
-			h4 API Keys
+		h4 API Keys
 		div.col-sm-12
 			table#api-key-table.table.table-bordered.table-striped
 				thead
@@ -69,4 +79,13 @@ block content
 
 		$('#navbar-color').change(function () {
 			update_setting('navbar_inversed', !#{navbar_inversed});
+		});
+		
+		$('#location-change').click(function () {
+			$.ajax({
+				url: '/settings/locations/0/' + $('#locations\\[0\\]\\[lat\\]').val() + '/' + $('#locations\\[0\\]\\[lon\\]').val(),
+				method: 'POST'
+			});
+
+			location.reload(false);
 		});
