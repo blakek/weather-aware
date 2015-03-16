@@ -60,9 +60,9 @@ function getWeather(source_obj, options, on_complete) {
 		source_obj = valid_sources[0];
 	}
 
-	if (on_complete === undefined && options !== undefined) {
+	if (typeof on_complete === 'undefined' && typeof options === 'function') {
 		on_complete = options;
-		options = undefined;
+		options = null;
 	}
 
 	callAPI(parseAPIURI(source_obj), source_obj.conversion, on_complete);
@@ -114,6 +114,7 @@ function parseAPIURI(source_object) {
  */
 function forecastio2wa(result_object) {
 	return {
+		last_updated: now(),
 		location: {
 			latitude: result_object.latitude,
 			longitude: result_object.longitude
@@ -207,6 +208,7 @@ function forecastio2wa(result_object) {
 			}
 		},
 		alerts: result_object.alerts,
+		alert_count: (result_object.alerts) ? (result_object.alerts.length) : 0,
 		units: {
 			temp: 'F',
 			distance: 'mi',
@@ -219,6 +221,7 @@ function forecastio2wa(result_object) {
  */
 function test2wa(result_object) {
 	return {
+		last_updated: now(),
 		location: {
 			latitude: result_object.latitude,
 			longitude: result_object.longitude
@@ -312,6 +315,7 @@ function test2wa(result_object) {
 			}
 		},
 		alerts: result_object.alerts,
+		alert_count: (result_object.alerts) ? (result_object.alerts.length) : 0,
 		units: {
 			temp: 'F',
 			distance: 'mi',

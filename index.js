@@ -16,17 +16,6 @@ weather_source.api_key = page_settings.api_keys[weather_source.api_key_name];
 app.set('views', PUBLIC_FOLDER + '/views');
 app.use(express.static(PUBLIC_FOLDER));
 
-function getWeather(on_complete) {
-	wa.getWeather(weather_source, function (weather_data) {
-		weather_data.last_updated = moment().format('X');
-		weather_data.alert_count = (weather_data.alerts) ? weather_data.alerts.length : 0;
-
-		page_settings.weather = weather_data;
-
-		on_complete();
-	});
-}
-
 function setPageSettings(selectedPage, callback) {
 	page_settings.selected = selectedPage;
 	page_settings.date = moment().format('D MMMM YYYY');
@@ -35,7 +24,11 @@ function setPageSettings(selectedPage, callback) {
 		callback();
 	}
 
-	getWeather(callback);
+	wa.getWeather(weather_source,  function (weather_data) {
+		page_settings.weather = weather_data;
+
+		callback();
+	});
 }
 
 app.get('/settings', function (req, res) {
