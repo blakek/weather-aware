@@ -16,7 +16,7 @@ block content
 							each t in theme_list
 								li(class=(t === '#{theme}' ? 'active' : ''))
 									a(href='javascript:update_setting("theme", "' + t + '");')= t
-		div.col-sm-2.btn-group(data-toggle='buttons')
+		div.col-sm-4.btn-group(data-toggle='buttons')
 			label.btn.btn-default#navbar-color-label Alternate navbar color?
 				input(type='checkbox')#navbar-color
 
