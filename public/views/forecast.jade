@@ -1,0 +1,22 @@
+extends ./base.jade
+
+block content
+	- var storm_direction = weather.now.nearest_storm.bearing;
+	- var sd_transform = storm_direction - 45; // The fa-location-arrow is already tilted 45 degrees
+	
+	- function timeConverter(UNIX_timestamp) { 
+	- 	var a = new Date(UNIX_timestamp * 1000);
+	- 	var months = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+	- 	var year = a.getFullYear();
+	- 	var month = months[a.getMonth()];
+	- 	var date = a.getDate();
+	- 	var hour = a.getHours();
+	- 	var min = a.getMinutes() < 10 ? '0' + a.getMinutes() : a.getMinutes();
+	- 	var sec = a.getSeconds() < 10 ? '0' + a.getSeconds() : a.getSeconds();
+	- 	var time = hour + ':' + min + ' (' + month + ', ' + date + ')';
+	- 	return time;
+	- }
+	
+	h2 Forecast
+
+	p.small Last updated: #[=timeConverter(weather.last_updated)]

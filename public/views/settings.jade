@@ -11,16 +11,15 @@ block content
 			form.form-inline
 				div.form-group
 					div.dropdown#dd-theme
-						button.btn.btn-default.dropdown-toggle(type='button' data-toggle='dropdown' aria-expanded='true')#ddm-theme Theme
+						button.btn.btn-default.dropdown-toggle(type='button' data-toggle='dropdown' aria-expanded='true')#ddm-theme Theme #[i.fa.fa-angle-down]
 						ul.dropdown-menu(aria-labeledby='ddm-theme')
 							each t in theme_list
 								li(class=(t === '#{theme}' ? 'active' : ''))
 									a(href='javascript:update_setting("theme", "' + t + '");')= t
-		div.col-sm-2
-			div.checkbox
-				label
-					input(type='checkbox')#navbar-color
-					span  Alternate navbar color?
+		div.col-sm-4.btn-group(data-toggle='buttons')
+			label.btn.btn-default#navbar-color-label Alternate navbar color?
+				input(type='checkbox')#navbar-color
+
 	div.well.row
 		div.col-sm-12
 			h4 API Keys
@@ -46,7 +45,11 @@ block content
 
 	script.
 		$('#dd-theme li.active > a').append(' (current)');
-		$('#navbar-color').prop('checked', #{navbar_inversed});
+		
+		if (#{navbar_inversed}) {
+			$('#navbar-color').prop('checked', 'true');
+			$('#navbar-color-label').addClass('active');
+		}
 
 		function update_setting(key, value) {
 			$.ajax({

@@ -3,8 +3,9 @@ extends ./base.jade
 block content
 	- var storm_direction = weather.now.nearest_storm.bearing;
 	- var sd_transform = storm_direction - 45; // The fa-location-arrow is already tilted 45 degrees
+	
 	- function timeConverter(UNIX_timestamp) { 
-	- 	var a = new Date(UNIX_timestamp*1000);
+	- 	var a = new Date(UNIX_timestamp * 1000);
 	- 	var months = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
 	- 	var year = a.getFullYear();
 	- 	var month = months[a.getMonth()];
@@ -17,18 +18,26 @@ block content
 	- }
 	
 	.well
-		h1 Today
-			span.small  #{date}
-		h3
+		h1
 			i(class='wi wi-#{weather.now.icon}')
 			|  #{weather.now.conditions}
 		p.lead
-			i.wi.wi-thermometer
-			|  #{weather.now.temp} &deg;#{weather.units.temp}   (Hi: #{weather.today.temp.high} / Lo: #{weather.today.temp.low})
+			i(class='fa-fw wi wi-#{weather.now.icon}')
+			|  #{weather.today.summary}
 		p.lead
-			i.wi.wi-lightning
+			i.fa-fw.wi.wi-thermometer
+			|  Temp: #{weather.now.temp} &deg;#{weather.units.temp}   (Hi: #{weather.today.temp.high} / Lo: #{weather.today.temp.low})
+		p.lead
+			i.fa-fw.wi.wi-sprinkles
+			|  Current chance: #{weather.now.precipitation.probability}%
+			|  / All-day: #{weather.week.daily()[0].precipitation.probability}%
+		p.lead
+			i.fa-fw.wi.wi-strong-wind
+			|  Wind: #{weather.now.wind.speed} #{weather.units.speed}
+		p.lead
+			i.fa-fw.wi.wi-lightning
 			|  Nearest storm: #{weather.now.nearest_storm.distance} #{weather.units.distance}&nbsp;
-			i.fa.fa-location-arrow(style="transform:rotate(#{sd_transform}deg)")
+			i.fa-fw.fa.fa-location-arrow(style="transform:rotate(#{sd_transform}deg)")
 	
 	if weather.alert_count
 		div.panel.panel-default
@@ -45,11 +54,10 @@ block content
 					each alert in weather.alerts
 						tr
 							td= alert.title
-							td= timeConverter(alert.expires)
 							td= timeConverter(alert.time)
+							td= timeConverter(alert.expires)
 							td
-								a(href='#{alert.uri}') External link &nbsp;
-									i.fa.fa-external-link
+								a(href='#{alert.uri}') External link #[i.fa.fa-external-link]
 
 	h6 Other weather sources:
 	ul
@@ -60,6 +68,5 @@ block content
 		li
 			a(href="http://www.wunderground.com/") Weather Underground
 
-	p.small Last updated:&nbsp;
-		= timeConverter(weather.last_updated)
+	p.small Last updated: #[=timeConverter(weather.last_updated)]
 	
