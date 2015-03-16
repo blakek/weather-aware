@@ -36,15 +36,13 @@ var valid_sources = [
 	},{
 		name: 'National Weather Service',
 		source_site: 'http://www.weather.gov/',
-		api_key_name: 'weather_gov',
 		forecast_uri: '',
 		storm_array_uri: '',
 		last_call: undefined,
 		conversion: undefined
 	},{
-		name: 'test',
+		name: 'Testing',
 		source_site: undefined,
-		api_key_name: '',
 		forecast_uri: 'file://' + __dirname + '/test/local.json',
 		storm_array_uri: '',
 		last_call: undefined,
@@ -68,7 +66,7 @@ function getWeather(source_obj, options, on_complete) {
 
 	if (now() - source_obj.last_call < reload_interval) {
 		var remainingtime = source_obj.last_call + reload_interval - now();
-		console.log('Using cached weather results for another ' + remainingtime + ' second(s).');
+		console.info('Using cached weather results for another ' + remainingtime + ' second(s).');
 
 		on_complete(last_call_output);
 		return;
@@ -96,7 +94,7 @@ function callAPI(uri, conversion_fn, on_complete) {
 	var output = '';
 
 	if (uri.slice(0, 7) === 'file://') {
-		last_call_output = conversion_fn(JSON.parse(require('fs').readFileSync(uri.slice(7))))
+		last_call_output = conversion_fn(JSON.parse(require('fs').readFileSync(uri.slice(7))));
 		return on_complete(last_call_output);
 	}
 
