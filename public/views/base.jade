@@ -3,6 +3,10 @@ include ./navbar.jade
 
 .container-fluid
 	block content
+	
+	p.small Weather last updated: #[=last_updated]
+		br
+		| Next update: #[=next_update]
 
 script.
 	$('#nav-' + '#{selected}').addClass('active');
