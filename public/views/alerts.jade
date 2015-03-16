@@ -27,16 +27,36 @@ block content
 						th Name
 						th Start time
 						th Expiration
-						th More info...
+						th Description
+						th More info
 				tbody
-					each alert in weather.alerts
+					each alert, index in weather.alerts
 						tr
 							td= alert.title
 							td= timeConverter(alert.time)
 							td= timeConverter(alert.expires)
 							td
+								button.btn.btn-default(data-toggle='modal' data-target='#descriptionModal' data-key='#{index}') Show #[i.fa.fa-angle-down]
+							td
 								a(href='#{alert.uri}') External link #[i.fa.fa-external-link]
+		
+		#descriptionModal.modal.fade(tabindex='-1' role='dialog' aria-hidden='true')
+			.modal-dialog
+				.modal-content
+					.modal-header
+						button(type='button' data-dismiss='modal' aria-label='Close').close &times;
+						h4.modal-title Alert Description
+						.modal-body
 	else
 		h4 #[i.fa.fa-check-circle.text-success] No alerts found
 
 	p.small Last updated: #[=timeConverter(weather.last_updated)]
+
+	script.
+		$('#descriptionModal').on('show.bs.modal', function (event) {
+			var button = $(event.relatedTarget);
+			var index = button.data('key');
+			
+			$(this).find('.modal-title').text('#{weather.alerts[0].title}');
+			$(this).find('.modal-body').html(!{JSON.stringify(weather.alerts[0].description.replace(/\n/g, "<br />"))});
+		});
