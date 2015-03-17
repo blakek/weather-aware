@@ -8,11 +8,14 @@ block content
 		.form-horizontal
 			.form-group
 				label.col-sm-3.control-label Default Location
-				div.col-sm-3
+				.col-sm-2
 					input(id='locations[0][lat]' type='text' placeholder='Latitude' value='#{locations[0].lat}').form-control
-				div.col-sm-3
+				.col-sm-2
 					input(id='locations[0][lon]' type='text' placeholder='Longitude' value='#{locations[0].lon}').form-control
-				button#location-change.btn.btn-default Change
+				.col-sm-3
+						button#use-current-loc.btn.btn-default Use current location
+				.col-sm-2
+						button#location-change.btn.btn-default Change
 			p.help-block This section will go under some big changes in the future... I'll likely move this to be a search-bar thingy in the navbar later on.
 			
 	div.well.row
@@ -81,6 +84,15 @@ block content
 			location.reload(true);
 		}
 		
+		$('#use-current-loc').click(function () {
+			if (navigator.geolocation) {
+				navigator.geolocation.getCurrentPosition(function (position) {
+					$('#locations\\[0\\]\\[lat\\]').val(position.coords.latitude);
+					$('#locations\\[0\\]\\[lon\\]').val(position.coords.longitude);
+				});
+			}
+		});
+		
 		$('input[name="source-select"]').change(function () {
 			update_setting('weather_source', $(this).data('toggle'));
 		});
@@ -99,5 +111,5 @@ block content
 				method: 'POST'
 			});
 
-			location.reload(false);
+			location.reload(true);
 		});
