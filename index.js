@@ -9,7 +9,7 @@ var PUBLIC_FOLDER = __dirname + '/public';
 var port = process.env.PORT || 4343;
 var page_settings = settings.getAllSettingsSync();
 
-var weather_source = wa.valid_sources[wa.valid_sources.length - 1]; // This will be set later using the settings file
+var weather_source = wa.getSourceWithId(page_settings.weather_source);
 wa.setLocation(page_settings.locations[0].lat, page_settings.locations[0].lon);
 weather_source.api_key = page_settings.api_keys[weather_source.api_key_name];
 
@@ -57,6 +57,12 @@ app.get('/settings/:key', function (req, res) {
  */
 app.post('/settings/:key/:value', function (req, res) {
 	page_settings[req.params.key] = req.params.value;
+
+	if (req.params.key === 'weather_source') {
+		weather_source = wa.getSourceWithId(req.params.value);
+		weather_source.api_key = page_settings.api_keys[weather_source.api_key_name];
+		weather_source.last_call = 0;
+	}
 
 	// FIXME: temporary workaround
 	page_settings.weather = undefined;

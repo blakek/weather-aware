@@ -24,7 +24,7 @@ block content
 		p.lead
 			i.fa-fw.wi.wi-lightning
 			|  Nearest storm: #{weather.now.nearest_storm.distance} #{weather.units.distance}&nbsp;
-			i.fa-fw.fa.fa-location-arrow(style="transform:rotate(#{sd_transform}deg)")
+			i.fa-fw.fa.fa-location-arrow(style="-webkit-transform:rotate(#{sd_transform}deg);-ms-transform:rotate(#{sd_transform}deg);transform:rotate(#{sd_transform}deg)")
 	
 	if weather.alert_count
 		div.panel.panel-default
@@ -34,15 +34,11 @@ block content
 				thead
 					tr
 						th Name
-						th Start time
-						th Expiration
 						th More info...
 				tbody
 					each alert in weather.alerts
 						tr
 							td= alert.title
-							td= timeConverter(alert.time)
-							td= timeConverter(alert.expires)
 							td
 								a(href='#{alert.uri}') External link #[i.fa.fa-external-link]
 
