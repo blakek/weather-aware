@@ -18,27 +18,31 @@ block content
 	- }
 
 	if weather.alert_count > 0
+		.visible-xs-block #[i.fa.fa-info-circle] Scroll the table to the side for more information.
+		
 		.panel.panel-default
 			.panel-heading
 				h3.panel-title Alerts
-			table.table.table-striped
-				thead
-					tr
-						th Name
-						th Start time
-						th Expiration
-						th Description
-						th More info
-				tbody
-					each alert, index in weather.alerts
+			
+			.table-responsive
+				table.table.table-striped
+					thead
 						tr
-							td= alert.title
-							td= timeConverter(alert.time)
-							td= timeConverter(alert.expires)
-							td
-								button.btn.btn-default(data-toggle='modal' data-target='#descriptionModal' data-key='#{index}') Show #[i.fa.fa-angle-down]
-							td
-								a(href='#{alert.uri}') External link #[i.fa.fa-external-link]
+							th Name
+							th Start time
+							th Expiration
+							th Description
+							th More info
+					tbody
+						each alert, index in weather.alerts
+							tr
+								td= alert.title
+								td= timeConverter(alert.time)
+								td= timeConverter(alert.expires)
+								td
+									button.btn.btn-default(data-toggle='modal' data-target='#descriptionModal' data-key='#{index}') Show #[i.fa.fa-angle-down]
+								td
+									a(href='#{alert.uri}') External link #[i.fa.fa-external-link]
 		
 		#descriptionModal.modal.fade(tabindex='-1' role='dialog' aria-hidden='true')
 			.modal-dialog
