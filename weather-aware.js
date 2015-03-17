@@ -160,8 +160,8 @@ function forecastio2wa(result_object) {
 			longitude: result_object.longitude
 		},
 		now: {
-			temp: result_object.currently.temperature,
-			temp_apparent: result_object.currently.apparentTemperature,
+			temp: Math.round(result_object.currently.temperature),
+			temp_apparent: Math.round(result_object.currently.apparentTemperature),
 			conditions: result_object.currently.summary,
 			icon: forecast_io2waIcon(result_object.currently.icon),
 			nearest_storm: {
@@ -170,18 +170,18 @@ function forecastio2wa(result_object) {
 			},
 			precipitation: {
 				intensity: result_object.currently.precipIntensity,
-				probability: result_object.currently.precipProbability * 100,
+				probability: Math.round(result_object.currently.precipProbability * 100),
 				type: result_object.currently.precipType
 			},
 			wind: {
-				speed: result_object.currently.windSpeed,
+				speed: Math.round(result_object.currently.windSpeed),
 				bearing: result_object.currently.windBearing
 			}
 		},
 		today: {
 			temp: {
-				high: result_object.daily.data[0].temperatureMax,
-				low: result_object.daily.data[0].temperatureMin
+				high: Math.round(result_object.daily.data[0].temperatureMax),
+				low: Math.round(result_object.daily.data[0].temperatureMin)
 			},
 			sun: {
 				rise_time: result_object.daily.data[0].sunriseTime,
@@ -194,10 +194,10 @@ function forecastio2wa(result_object) {
 
 				result_object.hourly.data.forEach(function (hour_data) {
 					r.push({
-						temp: hour_data.temperature,
+						temp: Math.round(hour_data.temperature),
 						precipitation: {
 							intensity: hour_data.precipIntensity,
-							probability: hour_data.precipProbability * 100,
+							probability: Math.round(hour_data.precipProbability * 100),
 							type: hour_data.precipType
 						},
 						sun: {
@@ -206,7 +206,7 @@ function forecastio2wa(result_object) {
 						},
 						wind: {
 							bearing: hour_data.windBearing,
-							speed: hour_data.windSpeed
+							speed: Math.round(hour_data.windSpeed)
 						},
 						summary: hour_data.summary,
 						icon: forecast_io2waIcon(hour_data.icon),
@@ -223,12 +223,12 @@ function forecastio2wa(result_object) {
 				result_object.daily.data.forEach(function (day_data) {
 					r.push({
 						temp: {
-							high: day_data.temperatureMax,
-							low: day_data.temperatureMin
+							high: Math.round(day_data.temperatureMax),
+							low: Math.round(day_data.temperatureMin)
 						},
 						precipitation: {
 							intensity: day_data.precipIntensity,
-							probability: day_data.precipProbability * 100,
+							probability: Math.round(day_data.precipProbability * 100),
 							type: day_data.precipType
 						},
 						sun: {
@@ -237,7 +237,7 @@ function forecastio2wa(result_object) {
 						},
 						wind: {
 							bearing: day_data.windBearing,
-							speed: day_data.windSpeed
+							speed: Math.round(day_data.windSpeed)
 						},
 						summary: day_data.summary,
 						icon: forecast_io2waIcon(day_data.icon),
@@ -267,8 +267,8 @@ function test2wa(result_object) {
 			longitude: result_object.longitude
 		},
 		now: {
-			temp: result_object.currently.temperature,
-			temp_apparent: result_object.currently.apparentTemperature,
+			temp: Math.round(result_object.currently.temperature),
+			temp_apparent: Math.round(result_object.currently.apparentTemperature),
 			conditions: result_object.currently.summary,
 			icon: forecast_io2waIcon(result_object.currently.icon),
 			nearest_storm: {
@@ -277,18 +277,18 @@ function test2wa(result_object) {
 			},
 			precipitation: {
 				intensity: result_object.currently.precipIntensity,
-				probability: result_object.currently.precipProbability * 100,
+				probability: Math.round(result_object.currently.precipProbability * 100),
 				type: result_object.currently.precipType
 			},
 			wind: {
-				speed: result_object.currently.windSpeed,
+				speed: Math.round(result_object.currently.windSpeed),
 				bearing: result_object.currently.windBearing
 			}
 		},
 		today: {
 			temp: {
-				high: result_object.daily.data[0].temperatureMax,
-				low: result_object.daily.data[0].temperatureMin
+				high: Math.round(result_object.daily.data[0].temperatureMax),
+				low: Math.round(result_object.daily.data[0].temperatureMin)
 			},
 			sun: {
 				rise_time: result_object.daily.data[0].sunriseTime,
@@ -301,10 +301,10 @@ function test2wa(result_object) {
 
 				result_object.hourly.data.forEach(function (hour_data) {
 					r.push({
-						temp: hour_data.temperature,
+						temp: Math.round(hour_data.temperature),
 						precipitation: {
 							intensity: hour_data.precipIntensity,
-							probability: hour_data.precipProbability * 100,
+							probability: Math.round(hour_data.precipProbability * 100),
 							type: hour_data.precipType
 						},
 						sun: {
@@ -313,7 +313,7 @@ function test2wa(result_object) {
 						},
 						wind: {
 							bearing: hour_data.windBearing,
-							speed: hour_data.windSpeed
+							speed: Math.round(hour_data.windSpeed)
 						},
 						summary: hour_data.summary,
 						icon: forecast_io2waIcon(hour_data.icon),
@@ -330,12 +330,12 @@ function test2wa(result_object) {
 				result_object.daily.data.forEach(function (day_data) {
 					r.push({
 						temp: {
-							high: day_data.temperatureMax,
-							low: day_data.temperatureMin
+							high: Math.round(day_data.temperatureMax),
+							low: Math.round(day_data.temperatureMin)
 						},
 						precipitation: {
 							intensity: day_data.precipIntensity,
-							probability: day_data.precipProbability * 100,
+							probability: Math.round(day_data.precipProbability * 100),
 							type: day_data.precipType
 						},
 						sun: {
@@ -344,7 +344,7 @@ function test2wa(result_object) {
 						},
 						wind: {
 							bearing: day_data.windBearing,
-							speed: day_data.windSpeed
+							speed: Math.round(day_data.windSpeed)
 						},
 						summary: day_data.summary,
 						icon: forecast_io2waIcon(day_data.icon),

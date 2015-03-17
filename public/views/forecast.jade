@@ -4,4 +4,25 @@ block content
 	- var storm_direction = weather.now.nearest_storm.bearing;
 	- var sd_transform = storm_direction - 45; // The fa-location-arrow is already tilted 45 degrees
 	
+	- function timestamp2day(UNIX_timestamp) {
+	- 	var a = new Date(UNIX_timestamp * 1000);
+	- 	var days = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+	- 	return days[a.getDay()] + ' ' + a.getDate();
+	- }
+	
 	h2 Forecast
+	
+	.table-responsive
+		table.table.text-center
+			tr
+			each day in weather.week.daily()
+				th.text-center
+					strong= timestamp2day(day.time)
+			tr
+			each day in weather.week.daily()
+				td
+					p #[i(class='wi wi-#{day.icon}')]
+					p #{day.temp.high}&deg; | #{day.temp.low}&deg;
+					p #[i.fa-fw.wi.wi-sprinkles(class=('#{day.precipitation.probability}' > 49) ? 'text-info' : '')] #{day.precipitation.probability}%
+					p #[i.fa-fw.wi.wi-strong-wind] #{day.wind.speed} #[i.fa.fa-fw.fa-long-arrow-up(style="-webkit-transform:rotate(#{day.wind.bearing}deg);-ms-transform:rotate(#{day.wind.bearing}deg);transform:rotate(#{day.wind.bearing}deg)")]
+					p #{day.summary}
