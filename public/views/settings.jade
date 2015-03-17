@@ -1,6 +1,8 @@
 extends ./base.jade
 
 block content
+	.alert-area.alert(style="display:none") Error: Testing
+	
 	h2 Settings
 
 	div.well.row
@@ -84,12 +86,47 @@ block content
 			location.reload(true);
 		}
 		
+		function show_alert(message, title, type) {
+			if (typeof title !== 'undefined' && title !== '' && title !== null) {
+				message = '<strong>' + title + '</strong> ' + message;
+			}
+			
+			if (typeof type === 'undefined') {
+				type = 'info';
+			}
+			
+			$('.alert-area')
+				.addClass('alert-' + type)
+				.html(message)
+				.fadeIn();
+		}
+		
 		$('#use-current-loc').click(function () {
 			if (navigator.geolocation) {
 				navigator.geolocation.getCurrentPosition(function (position) {
 					$('#locations\\[0\\]\\[lat\\]').val(position.coords.latitude);
 					$('#locations\\[0\\]\\[lon\\]').val(position.coords.longitude);
+				}, function (error) {
+					switch(error.code) {
+						case error.PERMISSION_DENIED:
+							show_alert('Denied the request for Geolocation.', null, 'warning');
+							break;
+						case error.POSITION_UNAVAILABLE:
+							show_alert('Location information is unavailable.', null, 'warning');
+							break;
+						case error.TIMEOUT:
+							show_alert('The request to get location timed out.', null, 'warning');
+							break;
+						default:
+							show_alert('An unknown error occurred.', null, 'warning');
+							break;
+					}
+				}, {
+					timeout: 7000,
+					enableHighAccuracy: true
 				});
+			} else {
+				show_alert('Location not supported.', null, 'warning');
 			}
 		});
 		
