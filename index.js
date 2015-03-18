@@ -14,7 +14,7 @@ wa.setLocation(page_settings.locations[0].lat, page_settings.locations[0].lon);
 weather_source.api_key = page_settings.api_keys[weather_source.api_key_name];
 
 app.set('views', PUBLIC_FOLDER + '/views');
-app.use(express.static(PUBLIC_FOLDER));
+app.use(express.static(PUBLIC_FOLDER, { maxAge: 86400000 /* one day */ }));
 
 function setPageSettings(selectedPage, callback) {
 	page_settings.selected = selectedPage;
