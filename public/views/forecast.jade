@@ -23,6 +23,6 @@ block content
 				td
 					p #[i(class='wi wi-#{day.icon}')]
 					p #{day.temp.high}&deg; | #{day.temp.low}&deg;
-					p #[i.fa-fw.wi.wi-sprinkles(class=('#{day.precipitation.probability}' > 49) ? 'text-info' : '')] #{day.precipitation.probability}%
+					p #[i.fa-fw.wi.wi-sprinkles(class=('#{day.precipitation.probability}' > 49) ? 'text-primary' : '')] #{day.precipitation.probability}%
 					p #[i.fa-fw.wi.wi-strong-wind] #{day.wind.speed} #[i.fa.fa-fw.fa-long-arrow-up(style="-webkit-transform:rotate(#{day.wind.bearing}deg);-ms-transform:rotate(#{day.wind.bearing}deg);transform:rotate(#{day.wind.bearing}deg)")]
 					p #{day.summary}
