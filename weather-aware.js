@@ -267,7 +267,7 @@ function forecast_io2waIcon(origText) {
 	switch (origText) {
 		case 'partly-cloudy-day':
 			return 'day-cloudy';
-		case 'partly-cloudy-night ':
+		case 'partly-cloudy-night':
 			return 'night-alt-cloudy';
 		case 'cloudy':
 			return 'cloudy';
