@@ -44,14 +44,6 @@ app.get('/settings', function (req, res) {
 	});
 });
 
-app.get('/settings/:key', function (req, res) {
-	// Not really used right now...
-	// settings.getValue(req.params.key, function (value) {
-	// 	res.end(JSON.stringify(value));
-	// });
-	res.render('settings.jade', page_settings);
-});
-
 /* TODO: Clean these settings things up. Could probably actually write in the
  * POST body the values to keep from needing all these different calls to /settings
  */
