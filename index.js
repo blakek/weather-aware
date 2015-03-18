@@ -1,6 +1,7 @@
 var os = require('os');
 var fs = require('fs');
 var express = require('express');
+var compression = require('compression');
 var moment = require('moment');
 var settings = require('./settings.js');
 var wa = require('./weather-aware.js');
@@ -12,6 +13,8 @@ var page_settings = settings.getAllSettingsSync();
 var weather_source = wa.getSourceWithId(page_settings.weather_source);
 wa.setLocation(page_settings.locations[0].lat, page_settings.locations[0].lon);
 weather_source.api_key = page_settings.api_keys[weather_source.api_key_name];
+
+app.use(compression());
 
 app.set('views', PUBLIC_FOLDER + '/views');
 app.use(express.static(PUBLIC_FOLDER, { maxAge: 86400000 /* one day */ }));
