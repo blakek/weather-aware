@@ -1,4 +1,6 @@
+var http = require('http');
 var https = require('https');
+var xml2js = require('xml2js');
 var reload_interval = 180; // Interval (in seconds) to refresh
 var location = {};
 var last_call_output = {};
@@ -115,15 +117,23 @@ function getSourceWithId(id) {
 function callAPI(source_obj, on_complete) {
 	var uri = parseAPIURI(source_obj);
 	var output = '';
+	var protocol;
+
+	console.log('Getting weather from: ' + uri);
 
 	if (uri.slice(0, 7) === 'file://') {
 		last_call_output = source_obj.conversion(require('fs').readFileSync(uri.slice(7)));
 		return on_complete(last_call_output);
+	} else if (uri.slice(0, 8) === 'https://') {
+		protocol = https;
+	} else {
+		if (uri.slice(0, 7) !== 'http://') {
+			uri = 'http://' + uri;
+		}
+		protocol = http;
 	}
 
-	console.log('Calling: ' + uri);
-
-	https.get(uri, function (res) {
+	protocol.get(uri, function (res) {
 		res.setEncoding('UTF-8');
 
 		res.on('data', function (data) {
