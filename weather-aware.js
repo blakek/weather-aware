@@ -13,12 +13,11 @@ var valid_sources = [
 		name: 'forecast.io', // Human-readable name of the source (required)
 		enabled: true, // Should this be shown as an option to users (requred for now)
 		source_site: 'http://forecast.io/', // Website of source for info (optional)
-		//api_key: '', // The API key... see api_key_name. This will be set later using the api_key_name.
 		api_key_name: 'forecast_io', // ** Name of ** the API key in the settings file (if needed). The settings.json file is ignored in git, so we can keep our keys there
 		forecast_uri: 'https://api.forecast.io/forecast/${api_key}/${latitude},${longitude}', // URI to get general forecast data (required)
 		storm_array_uri: 'https://api.darkskyapp.com/v1/interesting/${api_key}', // URI to get wide-area storm data (optional)
 		last_call: undefined, // Last time this source was called. Used for caching request results (esp. to keep from using up free API keys)
-		conversion: forecastio2wa // Function to populate our own variables from the API's. Should expect 1 argument - an object the API responded with (required)
+		conversion: forecastio2wa // Function to populate our own variables from the API's. Should expect 1 argument - a string the API responded with (required)
 	},{
 		id: 'openweathermap',
 		name: 'OpenWeatherMap',
@@ -40,12 +39,12 @@ var valid_sources = [
 		last_call: undefined,
 		conversion: undefined
 	},{
-		id: 'nws',
-		name: 'National Weather Service',
-		enabled: false,
+		id: 'nws-testing',
+		name: 'National Weather Service (under testing)',
+		enabled: true,
 		source_site: 'http://www.weather.gov/',
-		forecast_uri: '',
-		storm_array_uri: '',
+		forecast_uri: 'file://' + __dirname + '/test/nws-national-alerts.xml',
+		storm_array_uri: undefined,
 		last_call: undefined,
 		conversion: undefined
 	},{
@@ -53,7 +52,7 @@ var valid_sources = [
 		name: 'Testing',
 		enabled: true,
 		source_site: undefined,
-		forecast_uri: 'file://' + __dirname + '/test/alert.json',
+		forecast_uri: 'file://' + __dirname + '/test/forecast_io-alert.json',
 		storm_array_uri: '',
 		last_call: undefined,
 		conversion: test2wa
@@ -88,7 +87,7 @@ function getWeather(source_obj, options, on_complete) {
 	}
 
 	source_obj.last_call = now();
-	callAPI(parseAPIURI(source_obj), source_obj.conversion, on_complete);
+	callAPI(source_obj, on_complete);
 }
 
 /* Just a convenience function to set our local location object.
@@ -113,11 +112,12 @@ function getSourceWithId(id) {
 /* Will be used as the entry-point for getting info from the API URI,
  * calling conversion functions, etc.
  */
-function callAPI(uri, conversion_fn, on_complete) {
+function callAPI(source_obj, on_complete) {
+	var uri = parseAPIURI(source_obj);
 	var output = '';
 
 	if (uri.slice(0, 7) === 'file://') {
-		last_call_output = conversion_fn(JSON.parse(require('fs').readFileSync(uri.slice(7))));
+		last_call_output = source_obj.conversion(require('fs').readFileSync(uri.slice(7)));
 		return on_complete(last_call_output);
 	}
 
@@ -131,7 +131,7 @@ function callAPI(uri, conversion_fn, on_complete) {
 		});
 
 		res.on('end', function (data) {
-			last_call_output = conversion_fn(JSON.parse(output));
+			last_call_output = source_obj.conversion(output);
 			return on_complete(last_call_output);
 		});
 	});
@@ -152,7 +152,9 @@ function parseAPIURI(source_object) {
 /* Will be used to take a JavaScript object returned from forecast.io
  * to fill our own forecast variable(s)
  */
-function forecastio2wa(result_object) {
+function forecastio2wa(result_string) {
+	var result_object = JSON.parse(result_string);
+
 	return {
 		last_updated: now(),
 		location: {
@@ -259,8 +261,8 @@ function forecastio2wa(result_object) {
 
 /* Used to keep from calling the other APIs during testing our standardized format
  */
-function test2wa(result_object) {
-	return forecastio2wa(result_object);
+function test2wa(result_string) {
+	return forecastio2wa(result_string);
 }
 
 function forecast_io2waIcon(origText) {
