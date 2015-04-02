@@ -45,10 +45,10 @@ var valid_sources = [
 		name: 'National Weather Service (under testing)',
 		enabled: true,
 		source_site: 'http://www.weather.gov/',
-		forecast_uri: 'file://' + __dirname + '/test/nws-national-alerts.xml',
+		forecast_uri: 'file://' + __dirname + '/test/nws-local.xml',
 		storm_array_uri: undefined,
 		last_call: undefined,
-		conversion: undefined
+		conversion: test_nws2wa
 	},{
 		id: 'testing',
 		name: 'Testing',
