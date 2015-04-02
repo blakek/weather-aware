@@ -75,20 +75,10 @@ function getWeather(source_obj, options, on_complete) {
 		options = null;
 	}
 
-	if (now() - source_obj.last_call < reload_interval) {
-		var remainingtime = source_obj.last_call + reload_interval - now();
-		console.info('Using cached weather results for another ' + remainingtime + ' second(s).');
-
-		on_complete(last_call_output);
-		return;
-	}
-
 	if (on_complete === undefined && options !== undefined) {
 		on_complete = options;
 		options = undefined;
 	}
-
-	source_obj.last_call = now();
 	callAPI(source_obj, on_complete);
 }
 
@@ -118,6 +108,16 @@ function callAPI(source_obj, on_complete) {
 	var uri = parseAPIURI(source_obj);
 	var output = '';
 	var protocol;
+
+	if (now() - source_obj.last_call < reload_interval) {
+		var remainingtime = source_obj.last_call + reload_interval - now();
+		console.info('Using cached weather results for another ' + remainingtime + ' second(s).');
+
+		on_complete(last_call_output);
+		return;
+	}
+
+	source_obj.last_call = now();
 
 	console.log('Getting weather from: ' + uri);
 
