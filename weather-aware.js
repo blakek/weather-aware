@@ -122,6 +122,7 @@ function callAPI(source_obj, on_complete) {
 	console.log('Getting weather from: ' + uri);
 
 	if (uri.slice(0, 7) === 'file://') {
+		source_obj.last_call = 0;
 		last_call_output = source_obj.conversion(require('fs').readFileSync(uri.slice(7)));
 		return on_complete(last_call_output);
 	} else if (uri.slice(0, 8) === 'https://') {
