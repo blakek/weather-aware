@@ -48,6 +48,7 @@ var valid_sources = [
 		source_site: 'http://www.weather.gov/',
 		forecast_uri: 'file://' + __dirname + '/test/nws-local.xml',
 		//forecast_uri: 'http://graphical.weather.gov/xml/sample_products/browser_interface/ndfdXMLclient.php?lat=${latitude}&lon=${longitude}',
+		//forecast_uri: 'http://forecast.weather.gov/MapClick.php?lat=33.4567&lon=-88.8222&FcstType=json',
 		storm_array_uri: undefined,
 		last_call: undefined,
 		conversion: test_nws2wa
@@ -280,117 +281,28 @@ function test2wa(result_string) {
 
 function test_nws2wa(result_string) {
 	xmlParser.parseString(result_string, function (err, result) {
-		console.error(err);
+		if (err)
+			console.error(err);
 
 		var data = result.dwml.data[0];
+		var time_lookup = {};
 		var temp_lookup = {};
 
-		data.parameters[0].temperature.forEach(function () {
-			
+		data['time-layout'].forEach(function (val, i) {
+			time_lookup[val['layout-key'][0]] = {
+				start_times: val['start-valid-time'],
+				end_times: val['start-valid-time']
+			};
 		});
 
-		return {
-			last_updated: now(),
-			location: {
-				latitude: data.location[0].point[0].$.latitude,
-				longitude: data.location[0].point[0].$.longitude
-			},
-			now: {
-				temp: data,
-				temp_apparent: Math.round(result_object.currently.apparentTemperature),
-				conditions: result_object.currently.summary,
-				icon: forecast_io2waIcon(result_object.currently.icon),
-				nearest_storm: {
-					bearing: result_object.currently.nearestStormBearing || 0,
-					distance: result_object.currently.nearestStormDistance || 0
-				},
-				precipitation: {
-					intensity: result_object.currently.precipIntensity,
-					probability: Math.round(result_object.currently.precipProbability * 100),
-					type: result_object.currently.precipType
-				},
-				wind: {
-					speed: Math.round(result_object.currently.windSpeed),
-					bearing: result_object.currently.windBearing
-				}
-			},
-			today: {
-				temp: {
-					high: Math.round(result_object.daily.data[0].temperatureMax),
-					low: Math.round(result_object.daily.data[0].temperatureMin)
-				},
-				sun: {
-					rise_time: result_object.daily.data[0].sunriseTime,
-					set_time: result_object.daily.data[0].sunsetTime
-				},
-				summary: result_object.hourly.summary,
-				icon: forecast_io2waIcon(result_object.hourly.icon),
-				hourly: function () { // will contain precipitation, temp, and other hourly data
-					var r = [];
+		data.parameters[0].temperature.forEach(function (val, i) {
+			temp_lookup[val.$.type] = {
+				time_layout: val.$['time-layout'],
+				values: val.value
+			};
+		});
 
-					result_object.hourly.data.forEach(function (hour_data) {
-						r.push({
-							temp: Math.round(hour_data.temperature),
-							precipitation: {
-								intensity: hour_data.precipIntensity,
-								probability: Math.round(hour_data.precipProbability * 100),
-								type: hour_data.precipType
-							},
-							sun: {
-								rise_time: hour_data.sunriseTime,
-								set_time: hour_data.sunsetTime
-							},
-							wind: {
-								bearing: hour_data.windBearing,
-								speed: Math.round(hour_data.windSpeed)
-							},
-							summary: hour_data.summary,
-							icon: forecast_io2waIcon(hour_data.icon),
-							time: hour_data.time
-						});
-					});
-					return r;
-				}
-			},
-			week: {
-				daily: function() {
-					var r = [];
-
-					result_object.daily.data.forEach(function (day_data) {
-						r.push({
-							temp: {
-								high: Math.round(day_data.temperatureMax),
-								low: Math.round(day_data.temperatureMin)
-							},
-							precipitation: {
-								intensity: day_data.precipIntensity,
-								probability: Math.round(day_data.precipProbability * 100),
-								type: day_data.precipType
-							},
-							sun: {
-								rise_time: day_data.sunriseTime,
-								set_time: day_data.sunsetTime
-							},
-							wind: {
-								bearing: day_data.windBearing,
-								speed: Math.round(day_data.windSpeed)
-							},
-							summary: day_data.summary,
-							icon: forecast_io2waIcon(day_data.icon),
-							time: day_data.time
-						});
-					});
-					return r;
-				}
-			},
-			alerts: result_object.alerts,
-			alert_count: (result_object.alerts) ? (result_object.alerts.length) : 0,
-			units: {
-				temp: 'F',
-				distance: 'mi',
-				speed: 'mph'
-			}
-		};
+		console.log(temp_lookup.hourly);
 	});
 }
 
