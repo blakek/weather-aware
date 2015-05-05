@@ -20,7 +20,7 @@ var valid_sources = [
 		forecast_uri: 'https://api.forecast.io/forecast/${api_key}/${latitude},${longitude}', // URI to get general forecast data (required)
 		storm_array_uri: 'https://api.darkskyapp.com/v1/interesting/${api_key}', // URI to get wide-area storm data (optional)
 		last_call: undefined, // Last time this source was called. Used for caching request results (esp. to keep from using up free API keys)
-		conversion: forecastio2wa // Function to populate our own variables from the API's. Should expect 1 argument - a string the API responded with (required)
+		conversion: forecastio2wa // Function to populate our own variables from the API's. Should expect 2 arguments - a string the API responded with and a callback when finished (required)
 	},{
 		id: 'openweathermap',
 		name: 'OpenWeatherMap',
@@ -46,9 +46,9 @@ var valid_sources = [
 		name: 'National Weather Service (under testing)',
 		enabled: true,
 		source_site: 'http://www.weather.gov/',
-		forecast_uri: 'file://' + __dirname + '/test/nws-local.xml',
+		// forecast_uri: 'file://' + __dirname + '/test/nws-local.xml',
 		//forecast_uri: 'http://graphical.weather.gov/xml/sample_products/browser_interface/ndfdXMLclient.php?lat=${latitude}&lon=${longitude}',
-		//forecast_uri: 'http://forecast.weather.gov/MapClick.php?lat=33.4567&lon=-88.8222&FcstType=json',
+		forecast_uri: 'http://forecast.weather.gov/MapClick.php?lat=${latitude}&lon=${longitude}&FcstType=json',
 		storm_array_uri: undefined,
 		last_call: undefined,
 		conversion: test_nws2wa
@@ -126,8 +126,13 @@ function callAPI(source_obj, on_complete) {
 
 	if (uri.slice(0, 7) === 'file://') {
 		source_obj.last_call = 0;
-		last_call_output = source_obj.conversion(require('fs').readFileSync(uri.slice(7)));
-		return on_complete(last_call_output);
+
+		source_obj.conversion(require('fs').readFileSync(uri.slice(7)), function (weather_data) {
+			last_call_output = weather_data;
+			on_complete(weather_data);
+		});
+
+		return;
 	} else if (uri.slice(0, 8) === 'https://') {
 		protocol = https;
 	} else {
@@ -145,8 +150,13 @@ function callAPI(source_obj, on_complete) {
 		});
 
 		res.on('end', function (data) {
-			last_call_output = source_obj.conversion(output);
-			return on_complete(last_call_output);
+			// last_call_output = source_obj.conversion(output);
+			// return on_complete(last_call_output);
+
+			source_obj.conversion(output, function (weather_data) {
+				last_call_output = weather_data;
+				on_complete(weather_data);
+			});
 		});
 	});
 }
@@ -166,10 +176,10 @@ function parseAPIURI(source_object) {
 /* Will be used to take a JavaScript object returned from forecast.io
  * to fill our own forecast variable(s)
  */
-function forecastio2wa(result_string) {
+function forecastio2wa(result_string, cb) {
 	var result_object = JSON.parse(result_string);
 
-	return {
+	cb({
 		last_updated: now(),
 		location: {
 			latitude: result_object.latitude,
@@ -270,40 +280,247 @@ function forecastio2wa(result_string) {
 			distance: 'mi',
 			speed: 'mph'
 		}
-	};
+	});
 }
 
 /* Used to keep from calling the other APIs during testing our standardized format
  */
-function test2wa(result_string) {
-	return forecastio2wa(result_string);
+function test2wa(result_string, cb) {
+	forecastio2wa(result_string, cb);
 }
 
-function test_nws2wa(result_string) {
-	xmlParser.parseString(result_string, function (err, result) {
-		if (err)
-			console.error(err);
+function test_nws2wa(result_string, cb) {
+	console.log(result_string);
+	var result_object = JSON.parse(result_string);
 
-		var data = result.dwml.data[0];
-		var time_lookup = {};
-		var temp_lookup = {};
+	cb({
+		last_updated: now(),
+		location: {
+			latitude: result_object.location.latitude,
+			longitude: result_object.location.longitude
+		},
+		now: {
+			temp: j.currentobservation.Temp,
+			temp_apparent: 'N/A',
+			conditions: j.currentobservation.Weather,
+			icon: 'nothing-for-now',
+			nearest_storm: {
+				bearing: result_object.currently.nearestStormBearing || 0,
+				distance: result_object.currently.nearestStormDistance || 0
+			},
+			precipitation: {
+				intensity: result_object.currently.precipIntensity,
+				probability: j.data.pop[0],
+				type: 'Currently N/A'
+			},
+			wind: {
+				speed: j.currentobservation.Winds,
+				bearing: j.currentobservation.Windd
+			}
+		},
+		today: {
+			temp: {
+				high: Math.round(result_object.daily.data[0].temperatureMax),
+				low: Math.round(result_object.daily.data[0].temperatureMin)
+			},
+			sun: {
+				rise_time: result_object.daily.data[0].sunriseTime,
+				set_time: result_object.daily.data[0].sunsetTime
+			},
+			summary: result_object.hourly.summary,
+			icon: forecast_io2waIcon(result_object.hourly.icon),
+			hourly: function () { // will contain precipitation, temp, and other hourly data
+				var r = [];
 
-		data['time-layout'].forEach(function (val, i) {
-			time_lookup[val['layout-key'][0]] = {
-				start_times: val['start-valid-time'],
-				end_times: val['start-valid-time']
-			};
-		});
+				result_object.hourly.data.forEach(function (hour_data) {
+					r.push({
+						temp: Math.round(hour_data.temperature),
+						precipitation: {
+							intensity: hour_data.precipIntensity,
+							probability: Math.round(hour_data.precipProbability * 100),
+							type: hour_data.precipType
+						},
+						sun: {
+							rise_time: hour_data.sunriseTime,
+							set_time: hour_data.sunsetTime
+						},
+						wind: {
+							bearing: hour_data.windBearing,
+							speed: Math.round(hour_data.windSpeed)
+						},
+						summary: hour_data.summary,
+						icon: forecast_io2waIcon(hour_data.icon),
+						time: hour_data.time
+					});
+				});
+				return r;
+			}
+		},
+		week: {
+			daily: function() {
+				var r = [];
 
-		data.parameters[0].temperature.forEach(function (val, i) {
-			temp_lookup[val.$.type] = {
-				time_layout: val.$['time-layout'],
-				values: val.value
-			};
-		});
-
-		console.log(temp_lookup.hourly);
+				result_object.daily.data.forEach(function (day_data) {
+					r.push({
+						temp: {
+							high: Math.round(day_data.temperatureMax),
+							low: Math.round(day_data.temperatureMin)
+						},
+						precipitation: {
+							intensity: day_data.precipIntensity,
+							probability: Math.round(day_data.precipProbability * 100),
+							type: day_data.precipType
+						},
+						sun: {
+							rise_time: day_data.sunriseTime,
+							set_time: day_data.sunsetTime
+						},
+						wind: {
+							bearing: day_data.windBearing,
+							speed: Math.round(day_data.windSpeed)
+						},
+						summary: day_data.summary,
+						icon: forecast_io2waIcon(day_data.icon),
+						time: day_data.time
+					});
+				});
+				return r;
+			}
+		},
+		alerts: result_object.alerts,
+		alert_count: (result_object.alerts) ? (result_object.alerts.length) : 0,
+		units: {
+			temp: 'F',
+			distance: 'mi',
+			speed: 'mph'
+		}
 	});
+
+
+	// xmlParser.parseString(result_string, function (err, result) {
+	// 	if (err)
+	// 		console.error(err);
+	//
+	// 	var data = result.dwml.data[0];
+	// 	var time_lookup = {};
+	// 	var temp_lookup = {};
+	//
+	// 	data['time-layout'].forEach(function (val, i) {
+	// 		time_lookup[val['layout-key'][0]] = {
+	// 			start_times: val['start-valid-time'],
+	// 			end_times: val['start-valid-time']
+	// 		};
+	// 	});
+	//
+	// 	data.parameters[0].temperature.forEach(function (val, i) {
+	// 		temp_lookup[val.$.type] = {
+	// 			time_layout: val.$['time-layout'],
+	// 			values: val.value
+	// 		};
+	// 	});
+
+	// 	var ret = {
+	// 		last_updated: now(),
+	// 		location: data.location[0].point[0].$,
+	// 		now: {
+	// 			temp: temp_lookup.hourly.values[0]._,
+	// 			temp_apparent: temp_lookup.apparent.values[0],
+	// 			conditions: result_object.currently.summary,
+	// 			icon: forecast_io2waIcon(result_object.currently.icon),
+	// 			nearest_storm: {
+	// 				bearing: result_object.currently.nearestStormBearing || 0,
+	// 				distance: result_object.currently.nearestStormDistance || 0
+	// 			},
+	// 			precipitation: {
+	// 				intensity: result_object.currently.precipIntensity,
+	// 				probability: Math.round(result_object.currently.precipProbability * 100),
+	// 				type: result_object.currently.precipType
+	// 			},
+	// 			wind: {
+	// 				speed: Math.round(result_object.currently.windSpeed),
+	// 				bearing: result_object.currently.windBearing
+	// 			}
+	// 		},
+	// 		today: {
+	// 			temp: {
+	// 				high: Math.round(result_object.daily.data[0].temperatureMax),
+	// 				low: Math.round(result_object.daily.data[0].temperatureMin)
+	// 			},
+	// 			sun: {
+	// 				rise_time: result_object.daily.data[0].sunriseTime,
+	// 				set_time: result_object.daily.data[0].sunsetTime
+	// 			},
+	// 			summary: result_object.hourly.summary,
+	// 			icon: forecast_io2waIcon(result_object.hourly.icon),
+	// 			hourly: function () { // will contain precipitation, temp, and other hourly data
+	// 				var r = [];
+	//
+	// 				result_object.hourly.data.forEach(function (hour_data) {
+	// 					r.push({
+	// 						temp: Math.round(hour_data.temperature),
+	// 						precipitation: {
+	// 							intensity: hour_data.precipIntensity,
+	// 							probability: Math.round(hour_data.precipProbability * 100),
+	// 							type: hour_data.precipType
+	// 						},
+	// 						sun: {
+	// 							rise_time: hour_data.sunriseTime,
+	// 							set_time: hour_data.sunsetTime
+	// 						},
+	// 						wind: {
+	// 							bearing: hour_data.windBearing,
+	// 							speed: Math.round(hour_data.windSpeed)
+	// 						},
+	// 						summary: hour_data.summary,
+	// 						icon: forecast_io2waIcon(hour_data.icon),
+	// 						time: hour_data.time
+	// 					});
+	// 				});
+	// 				return r;
+	// 			}
+	// 		},
+	// 		week: {
+	// 			daily: function() {
+	// 				var r = [];
+	//
+	// 				result_object.daily.data.forEach(function (day_data) {
+	// 					r.push({
+	// 						temp: {
+	// 							high: Math.round(day_data.temperatureMax),
+	// 							low: Math.round(day_data.temperatureMin)
+	// 						},
+	// 						precipitation: {
+	// 							intensity: day_data.precipIntensity,
+	// 							probability: Math.round(day_data.precipProbability * 100),
+	// 							type: day_data.precipType
+	// 						},
+	// 						sun: {
+	// 							rise_time: day_data.sunriseTime,
+	// 							set_time: day_data.sunsetTime
+	// 						},
+	// 						wind: {
+	// 							bearing: day_data.windBearing,
+	// 							speed: Math.round(day_data.windSpeed)
+	// 						},
+	// 						summary: day_data.summary,
+	// 						icon: forecast_io2waIcon(day_data.icon),
+	// 						time: day_data.time
+	// 					});
+	// 				});
+	// 				return r;
+	// 			}
+	// 		},
+	// 		alerts: result_object.alerts,
+	// 		alert_count: (result_object.alerts) ? (result_object.alerts.length) : 0,
+	// 		units: {
+	// 			temp: 'F',
+	// 			distance: 'mi',
+	// 			speed: 'mph'
+	// 		}
+	// 	};
+	//
+	// 	cb(ret);
+	// });
 }
 
 function forecast_io2waIcon(origText) {
