@@ -1,4 +1,5 @@
 var url = require('url');
+var path = require('path');
 var http = require('http');
 var https = require('https');
 var xml2js = require('xml2js');
@@ -289,7 +290,6 @@ function test2wa(result_string, cb) {
 }
 
 function test_nws2wa(result_string, cb) {
-	console.log(result_string);
 	var j = JSON.parse(result_string);
 
 	cb({
@@ -302,9 +302,9 @@ function test_nws2wa(result_string, cb) {
 			temp: j.currentobservation.Temp,
 			temp_apparent: 'N/A',
 			conditions: j.currentobservation.Weather,
-			icon: 'nothing-for-now',
+			icon: nws2waIcon(j.data.iconLink[0]),
 			nearest_storm: {
-				bearing: 'N/A',
+				bearing: 0, // Not done
 				distance: 'N/A'
 			},
 			precipitation: {
@@ -400,131 +400,30 @@ function test_nws2wa(result_string, cb) {
 		}
 	});
 
+	/* This could be used for the alerts when I get around to it
+	xmlParser.parseString(result_string, function (err, result) {
+		if (err)
+			console.error(err);
 
-	// xmlParser.parseString(result_string, function (err, result) {
-	// 	if (err)
-	// 		console.error(err);
-	//
-	// 	var data = result.dwml.data[0];
-	// 	var time_lookup = {};
-	// 	var temp_lookup = {};
-	//
-	// 	data['time-layout'].forEach(function (val, i) {
-	// 		time_lookup[val['layout-key'][0]] = {
-	// 			start_times: val['start-valid-time'],
-	// 			end_times: val['start-valid-time']
-	// 		};
-	// 	});
-	//
-	// 	data.parameters[0].temperature.forEach(function (val, i) {
-	// 		temp_lookup[val.$.type] = {
-	// 			time_layout: val.$['time-layout'],
-	// 			values: val.value
-	// 		};
-	// 	});
+		var data = result.dwml.data[0];
+		var time_lookup = {};
+		var temp_lookup = {};
 
-	// 	var ret = {
-	// 		last_updated: now(),
-	// 		location: data.location[0].point[0].$,
-	// 		now: {
-	// 			temp: temp_lookup.hourly.values[0]._,
-	// 			temp_apparent: temp_lookup.apparent.values[0],
-	// 			conditions: result_object.currently.summary,
-	// 			icon: forecast_io2waIcon(result_object.currently.icon),
-	// 			nearest_storm: {
-	// 				bearing: result_object.currently.nearestStormBearing || 0,
-	// 				distance: result_object.currently.nearestStormDistance || 0
-	// 			},
-	// 			precipitation: {
-	// 				intensity: result_object.currently.precipIntensity,
-	// 				probability: Math.round(result_object.currently.precipProbability * 100),
-	// 				type: result_object.currently.precipType
-	// 			},
-	// 			wind: {
-	// 				speed: Math.round(result_object.currently.windSpeed),
-	// 				bearing: result_object.currently.windBearing
-	// 			}
-	// 		},
-	// 		today: {
-	// 			temp: {
-	// 				high: Math.round(result_object.daily.data[0].temperatureMax),
-	// 				low: Math.round(result_object.daily.data[0].temperatureMin)
-	// 			},
-	// 			sun: {
-	// 				rise_time: result_object.daily.data[0].sunriseTime,
-	// 				set_time: result_object.daily.data[0].sunsetTime
-	// 			},
-	// 			summary: result_object.hourly.summary,
-	// 			icon: forecast_io2waIcon(result_object.hourly.icon),
-	// 			hourly: function () { // will contain precipitation, temp, and other hourly data
-	// 				var r = [];
-	//
-	// 				result_object.hourly.data.forEach(function (hour_data) {
-	// 					r.push({
-	// 						temp: Math.round(hour_data.temperature),
-	// 						precipitation: {
-	// 							intensity: hour_data.precipIntensity,
-	// 							probability: Math.round(hour_data.precipProbability * 100),
-	// 							type: hour_data.precipType
-	// 						},
-	// 						sun: {
-	// 							rise_time: hour_data.sunriseTime,
-	// 							set_time: hour_data.sunsetTime
-	// 						},
-	// 						wind: {
-	// 							bearing: hour_data.windBearing,
-	// 							speed: Math.round(hour_data.windSpeed)
-	// 						},
-	// 						summary: hour_data.summary,
-	// 						icon: forecast_io2waIcon(hour_data.icon),
-	// 						time: hour_data.time
-	// 					});
-	// 				});
-	// 				return r;
-	// 			}
-	// 		},
-	// 		week: {
-	// 			daily: function() {
-	// 				var r = [];
-	//
-	// 				result_object.daily.data.forEach(function (day_data) {
-	// 					r.push({
-	// 						temp: {
-	// 							high: Math.round(day_data.temperatureMax),
-	// 							low: Math.round(day_data.temperatureMin)
-	// 						},
-	// 						precipitation: {
-	// 							intensity: day_data.precipIntensity,
-	// 							probability: Math.round(day_data.precipProbability * 100),
-	// 							type: day_data.precipType
-	// 						},
-	// 						sun: {
-	// 							rise_time: day_data.sunriseTime,
-	// 							set_time: day_data.sunsetTime
-	// 						},
-	// 						wind: {
-	// 							bearing: day_data.windBearing,
-	// 							speed: Math.round(day_data.windSpeed)
-	// 						},
-	// 						summary: day_data.summary,
-	// 						icon: forecast_io2waIcon(day_data.icon),
-	// 						time: day_data.time
-	// 					});
-	// 				});
-	// 				return r;
-	// 			}
-	// 		},
-	// 		alerts: result_object.alerts,
-	// 		alert_count: (result_object.alerts) ? (result_object.alerts.length) : 0,
-	// 		units: {
-	// 			temp: 'F',
-	// 			distance: 'mi',
-	// 			speed: 'mph'
-	// 		}
-	// 	};
-	//
-	// 	cb(ret);
-	// });
+		data['time-layout'].forEach(function (val, i) {
+			time_lookup[val['layout-key'][0]] = {
+				start_times: val['start-valid-time'],
+				end_times: val['start-valid-time']
+			};
+		});
+
+		data.parameters[0].temperature.forEach(function (val, i) {
+			temp_lookup[val.$.type] = {
+				time_layout: val.$['time-layout'],
+				values: val.value
+			};
+		});
+	}
+	*/
 }
 
 function forecast_io2waIcon(origText) {
@@ -549,6 +448,70 @@ function forecast_io2waIcon(origText) {
 			return 'day-sunny';
 		default:
 			return origText;
+	}
+}
+
+function nws2waIcon(origText) {
+	var origIcon = path.basename(origText, path.extname(origText));
+
+	switch (origIcon) {
+		case 'bkn':
+		case 'nbkn':
+		case 'ovc':
+		case 'novc':
+			return 'cloudy';
+		case 'skc':
+			return 'day-sunny';
+		case 'nskc':
+			return 'night-clear';
+		case 'few':
+			return 'day-sunny-overcast';
+		case 'sct':
+			return 'day-cloudy';
+		case 'nfew':
+		case 'nsct':
+			return 'night-cloudy';
+		case 'fg':
+		case 'nfg':
+			return 'fog';
+		case 'fzra':
+		case 'ip':
+		case 'mix':
+		case 'raip':
+		case 'rasn':
+		case 'fzrara':
+			return 'rain-mix';
+		case 'nmix':
+		case 'nrasn':
+			return 'night-rain-mix';
+		case 'shra':
+		case 'hi_shwrs':
+		case 'hi_nshwrs':
+		case 'ra1':
+		case 'nra':
+			return 'showers';
+		case 'tsra':
+		case 'hi_tsra':
+			return 'storm-showers';
+		case 'ntsra':
+		case 'hi_ntsra':
+			return 'night-alt-storm-showers';
+		case 'sn':
+			return 'day-snow';
+		case 'nsn':
+			return 'night-snow';
+		case 'wind':
+		case 'nwind':
+			return 'strong-wind';
+		case 'ra':
+		case 'nra':
+			return 'wi-rain';
+		case 'nsvrtsra':
+			return 'tornado';
+		case 'mist':
+			return 'dust';
+		default:
+			return origIcon;
 	}
 }
 
