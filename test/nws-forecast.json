@@ -19,7 +19,7 @@
 		"county":"MSC105",
 		"firezone":"MSZ033",
 		"metar":"KGTR"
-},
+	},
 	"time":{
 		"layoutKey":"k-p12h-n13-1",
 		"startPeriodName":[
@@ -35,7 +35,7 @@
 			"Sunday Night",
 			"Monday",
 			"Monday Night",
-			"Tuesday"		
+			"Tuesday"
 		],
 		"startValidTime":[
 			"2015-05-06T12:00:00-05:00",
@@ -50,12 +50,12 @@
 			"2015-05-10T18:00:00-05:00",
 			"2015-05-11T06:00:00-05:00",
 			"2015-05-11T18:00:00-05:00",
-			"2015-05-12T06:00:00-05:00"	
+			"2015-05-12T06:00:00-05:00"
 		],
 		"tempLabel":["High","Low","High","Low","High","Low","High","Low","High","Low","High","Low","High"]
 	},
 	"data":{
-		"temperature":["86","61","85","63","87","64","84","65","83","64","81","67","81"],		
+		"temperature":["86","61","85","63","87","64","84","65","83","64","81","67","81"],
 		"pop":[null,null,null,null,null,null,null,null,null,null,"40","40","30"],
 
 		"weather":[
@@ -72,7 +72,7 @@
 			"Chance Thunderstorms",
 			"Chance Thunderstorms",
 			"Chance Thunderstorms"
-			],
+		],
 		"iconLink":[
 			"http://forecast.weather.gov/images/wtf/medium/sct.png",
 			"http://forecast.weather.gov/images/wtf/medium/nfew.png",
@@ -87,13 +87,13 @@
 			"http://forecast.weather.gov/images/wtf/medium/tsra40.png",
 			"http://forecast.weather.gov/images/wtf/medium/ntsra40.png",
 			"http://forecast.weather.gov/images/wtf/medium/scttsra30.png"
-			],
+		],
 		"hazard":[
 
-			],
+		],
 		"hazardUrl":[
 
-			],
+		],
 		"text":[
 			"Mostly sunny, with a high near 86. Southeast wind around 10 mph. ",
 			"Mostly clear, with a low around 61. Southeast wind around 5 mph. ",
@@ -132,4 +132,3 @@
 			"WindChill":"NA"
 		}
 	}
-	
