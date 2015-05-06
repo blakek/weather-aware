@@ -326,7 +326,7 @@ function test_nws2wa(result_string, cb) {
 				rise_time: 'N/A',
 				set_time: 'N/A'
 			},
-			summary: 'N/A',
+			summary: j.data.text[0],
 			icon: forecast_io2waIcon('N/A'),
 			// hourly: function () { // will contain precipitation, temp, and other hourly data
 			// 	var r = [];
