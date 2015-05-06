@@ -1,0 +1,135 @@
+{
+	"operationalMode":"Production",
+	"srsName":"WGS 1984",
+	"creationDate":"2015-05-06T11:16:37-05:00",
+	"creationDateLocal":"6 May 10:45 am CDT",
+	"productionCenter":"Jackson, MS",
+	"credit":"http://www.srh.noaa.gov/jan",
+	"moreInformation":"http://weather.gov",
+	"location":{
+		"region":"srh",
+		"latitude":"33.46",
+		"longitude":"-88.8",
+		"elevation":"364",
+		"wfo":"JAN",
+		"timezone":"C|Y|6",
+		"areaDescription":"Mississippi State MS",
+		"radar":"KGWX",
+		"zone":"MSZ033",
+		"county":"MSC105",
+		"firezone":"MSZ033",
+		"metar":"KGTR"
+},
+	"time":{
+		"layoutKey":"k-p12h-n13-1",
+		"startPeriodName":[
+			"This Afternoon",
+			"Tonight",
+			"Thursday",
+			"Thursday Night",
+			"Friday",
+			"Friday Night",
+			"Saturday",
+			"Saturday Night",
+			"Sunday",
+			"Sunday Night",
+			"Monday",
+			"Monday Night",
+			"Tuesday"		
+		],
+		"startValidTime":[
+			"2015-05-06T12:00:00-05:00",
+			"2015-05-06T18:00:00-05:00",
+			"2015-05-07T06:00:00-05:00",
+			"2015-05-07T18:00:00-05:00",
+			"2015-05-08T06:00:00-05:00",
+			"2015-05-08T18:00:00-05:00",
+			"2015-05-09T06:00:00-05:00",
+			"2015-05-09T18:00:00-05:00",
+			"2015-05-10T06:00:00-05:00",
+			"2015-05-10T18:00:00-05:00",
+			"2015-05-11T06:00:00-05:00",
+			"2015-05-11T18:00:00-05:00",
+			"2015-05-12T06:00:00-05:00"	
+		],
+		"tempLabel":["High","Low","High","Low","High","Low","High","Low","High","Low","High","Low","High"]
+	},
+	"data":{
+		"temperature":["86","61","85","63","87","64","84","65","83","64","81","67","81"],		
+		"pop":[null,null,null,null,null,null,null,null,null,null,"40","40","30"],
+
+		"weather":[
+			"Mostly Sunny",
+			"Mostly Clear",
+			"Mostly Sunny",
+			"Mostly Clear",
+			"Mostly Sunny",
+			"Partly Cloudy",
+			"Partly Sunny",
+			"Mostly Cloudy",
+			"Partly Sunny",
+			"Mostly Cloudy",
+			"Chance Thunderstorms",
+			"Chance Thunderstorms",
+			"Chance Thunderstorms"
+			],
+		"iconLink":[
+			"http://forecast.weather.gov/images/wtf/medium/sct.png",
+			"http://forecast.weather.gov/images/wtf/medium/nfew.png",
+			"http://forecast.weather.gov/images/wtf/medium/sct.png",
+			"http://forecast.weather.gov/images/wtf/medium/nfew.png",
+			"http://forecast.weather.gov/images/wtf/medium/sct.png",
+			"http://forecast.weather.gov/images/wtf/medium/nsct.png",
+			"http://forecast.weather.gov/images/wtf/medium/bkn.png",
+			"http://forecast.weather.gov/images/wtf/medium/nbkn.png",
+			"http://forecast.weather.gov/images/wtf/medium/bkn.png",
+			"http://forecast.weather.gov/images/wtf/medium/nbkn.png",
+			"http://forecast.weather.gov/images/wtf/medium/tsra40.png",
+			"http://forecast.weather.gov/images/wtf/medium/ntsra40.png",
+			"http://forecast.weather.gov/images/wtf/medium/scttsra30.png"
+			],
+		"hazard":[
+
+			],
+		"hazardUrl":[
+
+			],
+		"text":[
+			"Mostly sunny, with a high near 86. Southeast wind around 10 mph. ",
+			"Mostly clear, with a low around 61. Southeast wind around 5 mph. ",
+			"Mostly sunny, with a high near 85. Southeast wind around 5 mph. ",
+			"Mostly clear, with a low around 63. Southeast wind around 5 mph. ",
+			"Mostly sunny, with a high near 87. South wind around 5 mph. ",
+			"Partly cloudy, with a low around 64. South southeast wind around 5 mph. ",
+			"Partly sunny, with a high near 84. South wind around 5 mph. ",
+			"Mostly cloudy, with a low around 65. South wind around 5 mph. ",
+			"Partly sunny, with a high near 83. South wind around 5 mph. ",
+			"Mostly cloudy, with a low around 64.",
+			"A 40 percent chance of showers and thunderstorms.  Mostly cloudy, with a high near 81.",
+			"A 40 percent chance of showers and thunderstorms.  Mostly cloudy, with a low around 67.",
+			"A 30 percent chance of showers and thunderstorms.  Partly sunny, with a high near 81."			]
+		},
+		"currentobservation":{
+			"id":"KGTR",
+			"name":"Columbus/West Point/Starkville, Golden Triangle Regional Airport",
+			"elev":"266",
+			"latitude":"33.45",
+			"longitude":"-88.58",
+			"Date":"6 May 10:45 am CDT",
+			"Temp":"79",
+			"Dewp":"55",
+			"Relh":"45",
+			"Winds":"7",
+			"Windd":"130",
+			"Gust":"0",
+			"Weather":"Clear",
+			"Weatherimage":"skc.png",
+			"Visibility":"10.00",
+			"Altimeter":"NA",
+			"SLP":"30.17",
+			"timezone":"CDT",
+			"state":"MS",
+			"WindChill":"NA"
+		}
+	}
+	
