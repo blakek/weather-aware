@@ -3,15 +3,15 @@ extends ./base.jade
 block content
 	- var storm_direction = weather.now.nearest_storm.bearing;
 	- var sd_transform = storm_direction - 45; // The fa-location-arrow is already tilted 45 degrees
-	
+
 	- function timestamp2day(UNIX_timestamp) {
 	- 	var a = new Date(UNIX_timestamp * 1000);
 	- 	var days = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
 	- 	return days[a.getDay()] + ' ' + a.getDate();
 	- }
-	
+
 	h2 Forecast
-	
+
 	.table-responsive
 		table.table.text-center
 			tr

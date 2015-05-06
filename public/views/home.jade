@@ -3,7 +3,7 @@ extends ./base.jade
 block content
 	- var storm_direction = weather.now.nearest_storm.bearing;
 	- var sd_transform = storm_direction - 45; // The fa-location-arrow is already tilted 45 degrees
-	
+
 	.well
 		h1
 			i(class='wi wi-#{weather.now.icon}')
@@ -30,7 +30,7 @@ block content
 			else
 				i.fa-fw.wi.wi-lightning.text-warning
 				|  Storm nearby
-	
+
 	if weather.alert_count
 		div.panel.panel-default
 			div.panel-heading
