@@ -2,7 +2,7 @@ extends ./base.jade
 
 block content
 	.alert-area.alert(style="display:none") Error: Testing
-	
+
 	h2 Settings
 
 	div.well.row
@@ -19,7 +19,7 @@ block content
 				.col-sm-2
 						button#location-change.btn.btn-default Change
 			p.help-block This section will go under some big changes in the future... I'll likely move this to be a search-bar thingy in the navbar later on.
-			
+
 	div.well.row
 		h4 Weather Sources
 		.btn-group(data-toggle='buttons')
@@ -28,7 +28,7 @@ block content
 					label.btn.btn-default(class=(source.id === weather_source) ? 'active': '')
 						input(type='radio' name='source-select' data-toggle='#{source.id}' autocomplete='off')
 						= source.name
-	
+
 	div.well.row
 		h4 Look and feel
 		div.col-sm-4
@@ -52,7 +52,7 @@ block content
 					tr
 						td Service name
 						td API Key
-						td 
+						td
 				tbody
 					each source in valid_sources
 						if (source.enabled)
@@ -72,7 +72,7 @@ block content
 
 	script.
 		$('#dd-theme li.active > a').append(' (current)');
-		
+
 		if (#{navbar_inversed}) {
 			$('#navbar-color').prop('checked', 'true');
 			$('#navbar-color-label').addClass('active');
@@ -86,22 +86,22 @@ block content
 
 			location.reload(true);
 		}
-		
+
 		function show_alert(message, title, type) {
 			if (typeof title !== 'undefined' && title !== '' && title !== null) {
 				message = '<strong>' + title + '</strong> ' + message;
 			}
-			
+
 			if (typeof type === 'undefined') {
 				type = 'info';
 			}
-			
+
 			$('.alert-area')
 				.addClass('alert-' + type)
 				.html(message)
 				.fadeIn();
 		}
-		
+
 		$('#use-current-loc').click(function () {
 			if (navigator.geolocation) {
 				navigator.geolocation.getCurrentPosition(function (position) {
@@ -130,11 +130,11 @@ block content
 				show_alert('Location not supported.', null, 'warning');
 			}
 		});
-		
+
 		$('input[name="source-select"]').change(function () {
 			update_setting('weather_source', $(this).data('toggle'));
 		});
-		
+
 		$('.key-update-btn').click(function () {
 			update_setting('api_keys/' + $(this).data('update-key'), $('#' + $(this).data('update-key') + '-key').val());
 		});
@@ -142,7 +142,7 @@ block content
 		$('#navbar-color').change(function () {
 			update_setting('navbar_inversed', !#{navbar_inversed});
 		});
-		
+
 		$('#location-change').click(function () {
 			$.ajax({
 				url: '/settings/locations/0/' + $('#locations\\[0\\]\\[lat\\]').val() + '/' + $('#locations\\[0\\]\\[lon\\]').val(),
