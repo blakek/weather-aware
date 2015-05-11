@@ -452,7 +452,7 @@ function forecast_io2waIcon(origText) {
 }
 
 function nws2waIcon(origText) {
-	var origIcon = path.basename(origText, path.extname(origText));
+	var origIcon = path.basename(origText, path.extname(origText)).match(/[a-zA-Z\-]+/g).toString();
 
 	switch (origIcon) {
 		case 'bkn':
