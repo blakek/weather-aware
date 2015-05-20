@@ -1,7 +1,7 @@
 extends ./base.jade
 
 block content
-	- var storm_direction = weather.now.nearest_storm.bearing;
+	- var storm_direction = weather.nearest_storm.bearing;
 	- var sd_transform = storm_direction - 45; // The fa-location-arrow is already tilted 45 degrees
 
 	.well
@@ -9,27 +9,27 @@ block content
 			i(class='wi wi-#{weather.now.icon}')
 			|  #{weather.now.conditions}
 		p.lead
-			i(class='fa-fw wi wi-#{weather.today.icon}')
-			|  #{weather.today.summary}
-		p.lead
 			i.fa-fw.wi.wi-thermometer
 			|  Temp: #{weather.now.temp} &deg;#{weather.units.temp}   (Hi: #{weather.today.temp.high} / Lo: #{weather.today.temp.low})
 		p.lead
 			i.fa-fw.wi.wi-sprinkles
 			|  Current chance: #{weather.now.precipitation.probability}%
-			|  / All-day: #{weather.week.daily()[0].precipitation.probability}%
+			//- |  / All-day: #{weather.week.daily()[0].precipitation.probability}%
 		p.lead
 			i.fa-fw.wi.wi-strong-wind
 			|  Wind: #{weather.now.wind.speed} #{weather.units.speed}
 			i.fa.fa-fw.fa-long-arrow-up(style="-webkit-transform:rotate(#{weather.now.wind.bearing}deg);-ms-transform:rotate(#{weather.now.wind.bearing}deg);transform:rotate(#{weather.now.wind.bearing}deg)")
 		p.lead
-			if (weather.now.nearest_storm.distance !== 0)
+			if (weather.nearest_storm.distance !== 0)
 				i.fa-fw.wi.wi-lightning
-				|  Nearest storm: #{weather.now.nearest_storm.distance} #{weather.units.distance}&nbsp;
+				|  Nearest storm: #{weather.nearest_storm.distance} #{weather.units.distance}&nbsp;
 				i.fa-fw.fa.fa-location-arrow(style="-webkit-transform:rotate(#{sd_transform}deg);-ms-transform:rotate(#{sd_transform}deg);transform:rotate(#{sd_transform}deg)")
 			else
 				i.fa-fw.wi.wi-lightning.text-warning
 				|  Storm nearby
+		p.lead
+			i(class='fa-fw wi wi-#{weather.today.icon}')
+			|  Overview: #{weather.today.summary}
 
 	if weather.alert_count
 		div.panel.panel-default

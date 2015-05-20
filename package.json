@@ -27,6 +27,8 @@
     "express": "^4.11.1",
     "jade": "^1.9.1",
     "moment": "^2.9.0",
+    "wa-source-forecast_io": "^0.1.0",
+    "wa-source-nws": "^0.1.5",
     "xml2js": "^0.4.6"
   }
 }

@@ -12,7 +12,7 @@ var page_settings = settings.getAllSettingsSync();
 
 var weather_source = wa.getSourceWithId(page_settings.weather_source);
 wa.setLocation(page_settings.locations[0].lat, page_settings.locations[0].lon);
-weather_source.api_key = page_settings.api_keys[weather_source.api_key_name];
+// weather_source.api_key = page_settings.api_keys[weather_source.api_key_name];
 
 app.use(compression());
 
@@ -28,7 +28,7 @@ function setPageSettings(selectedPage, callback) {
 		return;
 	}
 
-	wa.getWeather(weather_source,  function (weather_data) {
+	wa.getWeather(weather_source, {testing: false}, function (weather_data) {
 		page_settings.weather = weather_data;
 		page_settings.last_updated = moment(weather_data.last_updated, 'X').fromNow();
 		page_settings.next_update = moment(weather_source.last_call + wa.reload_interval, 'X').fromNow();
