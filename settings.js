@@ -2,32 +2,32 @@ var fs = require('fs');
 
 var SETTINGS_FILE = __dirname + '/settings.json';
 var DEFAULT_SETTINGS = {
-    weather_source: "testing",
-    api_keys: {},
-    locations: [
-        {lat: "33.456291", lon: "-88.795530"}
-    ],
-    title: "weather|aware",
-    theme: "paper.min.css",
-    theme_dir: "/css/themes",
-    selected: "home",
-    navbar_inversed: "false",
-    theme_list: []
+	weather_source: "testing",
+	api_keys: {},
+	locations: [
+		{lat: "33.456291", lon: "-88.795530"}
+	],
+	title: "weather|aware",
+	theme: "paper.min.css",
+	theme_dir: "/css/themes",
+	selected: "home",
+	navbar_inversed: "false",
+	theme_list: []
 };
 
 function createIfNotExists(settings_file) {
-    if (! fs.existsSync(settings_file)) {
-        fs.writeFileSync(settings_file, JSON.stringify(DEFAULT_SETTINGS, null, 4));
-    }
+	if (! fs.existsSync(settings_file)) {
+		fs.writeFileSync(settings_file, JSON.stringify(DEFAULT_SETTINGS, null, 4));
+	}
 }
 
 function _getAllSettingsSync() {
-    createIfNotExists(SETTINGS_FILE);
+	createIfNotExists(SETTINGS_FILE);
 	return JSON.parse(fs.readFileSync(SETTINGS_FILE, {encoding: 'UTF-8'}));
 }
 
 function _getAllSettings(callback) {
-    createIfNotExists(SETTINGS_FILE);
+	createIfNotExists(SETTINGS_FILE);
 
 	fs.readFile(SETTINGS_FILE, {encoding: 'UTF-8'}, function (err, data) {
 		callback(err, JSON.parse(data));
