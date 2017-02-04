@@ -24,10 +24,10 @@ block content
 		h4 Weather Sources
 		.btn-group(data-toggle='buttons')
 			each source in valid_sources
-				if (source.enabled)
-					label.btn.btn-default(class=(source.id === weather_source) ? 'active': '')
-						input(type='radio' name='source-select' data-toggle='#{source.id}' autocomplete='off')
-						= source.name
+				if (source.info.enabled)
+					label.btn.btn-default(class=(source.info.id === weather_source) ? 'active': '')
+						input(type='radio' name='source-select' data-toggle='#{source.info.id}' autocomplete='off')
+						= source.info.name
 
 	div.well.row
 		h4 Look and feel
@@ -46,29 +46,28 @@ block content
 
 	div.well.row
 		h4 API Keys
-		div.col-sm-12
+		.col-sm-12
 			table#api-key-table.table.table-bordered.table-striped
 				thead
 					tr
 						td Service name
-						td API Key
-						td
+						td(colspan=2) API Key
 				tbody
 					each source in valid_sources
-						if (source.enabled)
+						if (source.info.enabled)
 							tr
 								td
-									if (source.source_site !== undefined && source.source_site !== '')
-										a(href="#{source.source_site}")= source.name
+									if (source.info.source_site !== undefined && source.info.source_site !== '')
+										a(href="#{source.info.source_site}")= source.info.name
 									else
 										span= source.name
-								if (source.api_key_name === undefined)
+								if (source.info.needs_api_key === undefined || source.info.needs_api_key === false)
 									td(colspan='2').text-muted.text-center No key needed
 								else
 									td
-										input(type='text' id='#{source.api_key_name}-key' placeholder='API key' value=((api_keys !== undefined) ? api_keys[source.api_key_name] : '')).form-control
+										input(type='text' id='#{source.info.api_key_name}-key' placeholder='API key' value=((api_keys !== undefined) ? api_keys[source.api_key_name] : '')).form-control
 									td
-										button.btn.btn-default.btn-block.key-update-btn(data-update-key='#{source.api_key_name}') Change
+										button.btn.btn-default.btn-block.key-update-btn(data-update-key='#{source.info.api_key_name}') Change
 
 	script.
 		$('#dd-theme li.active > a').append(' (current)');

@@ -44,7 +44,7 @@ function getSourceWithId(id) {
 	var ret;
 
 	valid_sources.some(function (source) {
-		if (source.source.id === id) {
+		if (source.info.id === id) {
 			ret = source;
 			return false;
 		}
